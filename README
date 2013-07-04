@@ -1,0 +1,10 @@
+mbot shell scripts for the shell module
+https://github.com/ticklemynausea/mbot
+
+- dns: dns resolver
+- google: google search
+- lastfm: lastfm integration
+- rss: rss feed
+- twitter: twitter integration
+- weather: weather underground script
+- wotd: word of the day (via priberam.pt)
