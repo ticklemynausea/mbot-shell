@@ -1,8 +1,12 @@
 import pylast 
 import sys
+import os
 import code
 import re
 import pickle
+
+# ../mylib.py
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
 
 LEL = "0,5last.fm"

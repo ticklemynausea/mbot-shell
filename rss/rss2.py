@@ -9,6 +9,9 @@ import hashlib
 import time
 import socket
 from filelock import FileLock, FileLockException
+
+# ../mylib.py
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console,  print_error, unescape, strip
   
 #
