@@ -24,8 +24,11 @@ response = urllib.urlopen('http://ajax.googleapis.com/ajax/services/search/web?v
 json = m_json.loads(response)
 results = json['responseData']['results']
 
-n = 0
+i = 0
+string = ""
 for result in results:
-  title = strip(unescape(result['title'].replace("<b>","").replace("</b>", "")))
-  url = result['url']   # was URL in the original and that threw a name error exception
-  print_console("%s: %s" % (title, url))
+ title = strip(unescape(result['title'].replace("<b>","").replace("</b>", "")))
+ url = result['url']   # was URL in the original and that threw a name error exception
+ string = string + "%s (%s); " % (title, url)
+
+print_console("%s: %s" % (string, url))
