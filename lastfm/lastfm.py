@@ -243,6 +243,8 @@ class LastFM:
     else:
 
       tags = track.get_top_tags()
+      if not tags:
+        tags = track.artist.get_top_tags()
       track = track.get_add_info(user.__str__())
       
       if track.userloved == "1":
