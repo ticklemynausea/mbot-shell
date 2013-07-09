@@ -6,28 +6,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
 
 
-"""
-
--ultimas pesquisas :>
--top pesquisas -> cloud
-
-
-
-
-
-"""
-
 L = "13,16Priberam" 
 
 URL = 'http://www.priberam.pt/DLPO/default.aspx?pal='
 
 def usage():
-	print_console(L + "%s Usage: !priberam palavra")
+	print_console(L + " Usage: !priberam palavra")
 	exit(-1)
 
 def parsaRegisto(r):
 	# obter definicao
-	o = [s.replace("\t", " ") for s in r.findAll(text=True, recursive=True)]
+	o = [s.replace("\t", " ") for s in r.findAll(text=True)]
 	o = ''.join(o)
 
 	# marcar primeira palavra e limpar os espacos
@@ -42,14 +31,6 @@ def parsaRegisto(r):
 
 	return o
 
-def parsaSugestoes(r):
-	o = r.findAll("div", { "id" : "FormataSugestoesENaoEncontrados" })
-	if len(o) > 1 :
-		o = [''.join(w.findAll(text=True, recursive=True)) for w in o]
-		return u'\002Sugestoes:\002 ' + ', '.join(o)
-	else :
-		return '\002Palavra nao encontrada\002'
-
 def procura(palavra):
 	# validar palavras
 	try:
@@ -58,14 +39,19 @@ def procura(palavra):
 		content = open_req.read()	
 		soup = BeautifulSoup(content, fromEncoding="utf-8") # bad META na pagina
 
-		d = soup.find(id="DivDefinicao")
-		r = d.find(registo="true")
-		
-		if r :
+		definicao = soup.find(id="DivDefinicao")
+
+		registos = definicao.findAll("div", {"registo": "true"})
+		if len(registos) > 0 :
 			# found!
-			return parsaRegisto(r)
-		else :
-			return parsaSugestoes(d)
+			return '\n'.join([parsaRegisto(r) for r in registos])
+		
+		sugestoes = definicao.findAll("div", {"id": "FormataSugestoesENaoEncontrados"})
+		if len(sugestoes) > 0 :
+			sugestoes = [''.join(s.findAll(text=True)) for s in sugestoes]
+			return '\002Sugestoes:\002 ' + ', '.join(sugestoes)
+		
+		return '\002Palavra nao encontrada\002'
 
 	except Exception:
 		print_console("Erro ao tentar obter o conteudo.")
