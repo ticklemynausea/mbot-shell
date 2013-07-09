@@ -5,6 +5,10 @@ https://github.com/ticklemynausea/mbot
 - google: google search
 - lastfm: lastfm integration
 - rss: rss feed
+  - requires feedparser
 - twitter: twitter integration
 - weather: weather underground script
+  - requires Weather::Underground
 - wotd: word of the day (via priberam.pt)
+- priberam: dictionary (via priberam.pt) 
+  - requires beautifulsoup
