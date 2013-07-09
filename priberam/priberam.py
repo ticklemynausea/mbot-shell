@@ -11,7 +11,7 @@ L = "13,16Priberam"
 URL = 'http://www.priberam.pt/DLPO/default.aspx?pal='
 
 def usage():
-	print_console(L + " Usage: !priberam palavra")
+	#print_console(L + " Usage: !priberam palavra")
 	exit(-1)
 
 def parsaRegisto(r):
