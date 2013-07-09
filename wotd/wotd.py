@@ -20,7 +20,7 @@ except Exception:
   exit(-1)
   
 
-s = "\001%s\001" % wotd_l[0]
+s = "\002%s\002" % wotd_l[0]
 for l in wotd_l[1:]:
   if len(l) > 1:
    l = l.strip()
