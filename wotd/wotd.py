@@ -20,9 +20,10 @@ except Exception:
   exit(-1)
   
 
-print_console("Palavra do dia: %s" % wotd_l[0])
-print " \n"
+s = "\001%s\001" % wotd_l[0]
 for l in wotd_l[1:]:
-  l = l.strip()
   if len(l) > 1:
-    print_console(l)
+   l = l.strip()
+   s += "%s\002;\002 " % (l)
+
+print_console(s)
