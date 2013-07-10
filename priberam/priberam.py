@@ -24,22 +24,21 @@ class Definicao():
 	def contents(self):
 		o = [s.replace("\t", " ") for s in self.soup.findAll(text=True)]
 		
-		o = ''.join(o)
+		o = ' '.join(o)
 
 		# marcar primeira palavra e limpar os espacos
 		o = o.split(' ')
-		o[0] = '\002' + o[0] + '\002'
 		o = ' '.join(o)
 
 		# marcar linhas e remover \n
 		o = [w.strip() for w in o.split('\n')]
 		o = [w + '\002;\002 ' if len(w) > 1 else w for w in o]
-		o = ''.join(o)
+		o = ' '.join(o)
 
 		return o
 		
 	def __repr__(self):
-		return '\002' + self.palavra + '\002' + self.categoria + ' ' + self.contents()
+		return '\002' + self.palavra + '\002 ' + self.categoria + ' ' + self.contents()
 		
 
 
