@@ -16,7 +16,6 @@ L = "13,16Priberam"
 URL = 'http://www.priberam.pt/DLPO/default.aspx?pal='
 
 
-
 class Definicao():
 	def __init__(self, soup, palavra, categoria):
 		self.soup = soup
@@ -45,7 +44,7 @@ class Definicao():
 
 
 def usage():
-	print_console(L + " Usage: !dic palavra")
+	print_console(L + " Usage: !dic palavra [index]")
 	exit(-1)
 
 def attr(soup, attr, value):
