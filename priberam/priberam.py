@@ -73,11 +73,12 @@ def parsaRegisto(r):
 	# obter definicao
 	palavra = r.span.b.contents[0]
 	
-	return [d.__repr__() for d in getDefinicoes(r, palavra)][0]
-	return '\n'.join([d.__repr__() for d in getDefinicoes(r, palavra)])
+	return getDefinicoes(r, palavra)
 
-def procura(palavra):
-	# validar palavras
+def procura(palavra, n = 1):
+		n = n - 1
+		n = 0 if n < 0 else n
+	
 	#try:
 		req = Request(URL + palavra)
 		open_req = urlopen(req)
@@ -87,10 +88,16 @@ def procura(palavra):
 		definicao = soup.find(id="DivDefinicao")
 
 		registos = definicao.findAll("div", {"registo": "true"})
+		registos = [parsaRegisto(r) for r in registos]
+		registos = [d for r in registos for d in r]
 		if len(registos) > 0 :
 			# found!
-			return '\n'.join([parsaRegisto(r) for r in registos])
-		
+			try:
+				print_console('Definicao ' + str(n+1) + ' de ' + str(len(registos)))
+				return registos[n].__repr__()
+			except IndexError:
+				return 'Definicao ' + str(n+1) + ' de ' + str(len(registos)) + ' nao encontrada'
+				 		
 		sugestoes = definicao.findAll("div", {"id": "FormataSugestoesENaoEncontrados"})
 		if len(sugestoes) > 0 :
 			sugestoes = [''.join(s.findAll(text=True)) for s in sugestoes]
@@ -109,5 +116,10 @@ if __name__=="__main__":
 		exit(-1)
 
 	palavra = sys.argv[1]
-	print_console(procura(palavra))
+		
+	if len(sys.argv) == 2:
+		print_console(procura(palavra, 1))
+	elif len(sys.argv) == 3:
+		print_console(procura(palavra, int(sys.argv[2])))
+
 	
