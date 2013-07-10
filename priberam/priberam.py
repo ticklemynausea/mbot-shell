@@ -4,11 +4,10 @@ import sys, os, urllib2
 from BeautifulSoup import BeautifulSoup
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from mylib import print_console
+import mylib
 
 """
 -PARTIR OUTPUT
--esquema falso
 
 """
 
@@ -24,43 +23,24 @@ class Definicao():
 		self.palavra = palavra
 		self.categoria = categoria
 
-	def contents2(self):
+	def contents(self):
 		defs = []
 		for c in self.soup.findAll(recursive=False):
-			if attr(c, 'class', "varpb") :
-				pass
-			else:
+			if not attr(c, 'class', "varpb") :
 				defs += c.findAll(text=True)
 
 		o = [s.replace("\t", " ") for s in defs]
-		
 		o = ''.join(o)
 
 		# marcar linhas e remover \n
 		o = [w.strip() for w in o.split('\n')]
 		o = [w + '\002;\002 ' if len(w) > 1 else w for w in o]
 		o = ''.join(o)
-
-		return o
-		
-	def contents(self):
-		o = [s.replace("\t", " ") for s in self.soup.findAll(text=True)]
-		
-		o = ' '.join(o)
-
-		# marcar primeira palavra e limpar os espacos
-		o = o.split(' ')
-		o = ' '.join(o)
-
-		# marcar linhas e remover \n
-		o = [w.strip() for w in o.split('\n')]
-		o = [w + '\002;\002 ' if len(w) > 1 else w for w in o]
-		o = ' '.join(o)
 
 		return o
 		
 	def __repr__(self):
-		return '\002' + self.palavra + '\002 ' + self.categoria + ' ' + self.contents2()
+		return '\002' + self.palavra + '\002 ' + self.categoria + ' ' + self.contents()
 		
 
 
@@ -96,10 +76,10 @@ def printSignificado(registos, n):
 			for d in getDefinicoes(r, r.span.b.contents[0])]
 	try:
 		if n == 0 :
-			print_console('Encontrados ' + str(len(registos)))
-		print_console( registos[n].__repr__())
+			mylib.print_console('Encontrados ' + str(len(registos)))
+		mylib.print_console( registos[n].__repr__())
 	except IndexError:
-		print_console(str(n) + ' de ' + str(len(registos)) + ' nao encontrado')
+		mylib.print_console(str(n) + ' de ' + str(len(registos)) + ' nao encontrado')
 	return
 
 def procura(palavra, n = 0):
@@ -120,11 +100,11 @@ def procura(palavra, n = 0):
 		if len(sugestoes) > 0 :
 			# sem resultados :(
 			sugestoes = [''.join(s.findAll(text=True)) for s in sugestoes]
-			print_console('\002Sugestoes:\002 ' + ', '.join(sugestoes))
+			mylib.print_console('\002Sugestoes:\002 ' + ', '.join(sugestoes))
 			return
 		
 		# sem resultados nem sugestoes :((
-		print_console('\002Palavra nao encontrada\002')
+		mylib.print_console('\002Palavra nao encontrada\002')
 
 	#except Exception:
 	#	print_console("Erro ao tentar obter o conteudo.")
