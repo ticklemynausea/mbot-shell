@@ -1,15 +1,14 @@
-import feedparser
 import re
 import sys
-import code
 import os
+import pytwitter
 
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console, strip
 
 
-L = "0,11Twitter" 
+L = "0,10Twitter" 
   
 def usage():
   print "%s Usage: !twitter username [n]" % L
@@ -26,25 +25,15 @@ except IndexError:
 except ValueError:
   n = 0
 
-url = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=%s"
-profile_url = url % user
-
-f = feedparser.parse(profile_url)
-
-if f.bozo == 1:
-  print_console("%s omg :( %s" % (f.bozo, f.bozo_exception))
-  exit(-1)
-
-if 'error' in f.feed.keys() or f.feed.keys() == []:
-  print_console("%s Twitter feed for %s is private or doesn't exist" % (L, user))
-  exit(-1)
-  
 try:
-  entry = f.entries[n]
-except IndexError:
-  print_console("%s Tweet not available" % L)
+  t = pytwitter.Api(consumer_key = 'laKcPz3kAAH3TVz8wIRAA', consumer_secret = 'P7CD74v1ea5dO9JvJvv0blAmZaGmhQebAJIH2XLCI', access_token_key = '1523563723-gcn8yyeFiGK1PlxfnoPve9j0QWO3OVP2qyfhTCs', access_token_secret = 'QihKi7KCPFD7n9Yq3AFXDgWVc2vO3dmlzhClgsDxrU0')
+  tweets = t.GetUserTimeline(None, user)
+  tweet = tweets[n].GetText().encode('utf8').replace('\n', ' ')
+  print_console("%s %s: %s" % (L, user, tweet))
+except pytwitter.TwitterError as e:
+  err_msg = e.message[0].get('message').encode('utf8')
+  err_code = str(e.message[0].get('code'))
+  print_console("%s Code: %s - %s" % (L, err_code, err_msg))
   exit(-1)
-  
-summary = entry.summary
-print_console("%s %s (%s)" % (L, summary, entry.published.rsplit(' ', 1)[0]))
+
 
