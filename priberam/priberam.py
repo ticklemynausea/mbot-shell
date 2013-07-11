@@ -1,3 +1,4 @@
+# coding=utf8
 #!/usr/bin/env python
 
 import sys, os, urllib2
@@ -15,6 +16,7 @@ L = "13,16Priberam"
 
 URL = 'http://www.priberam.pt/DLPO/default.aspx?pal='
 
+palavra = None
 
 class Definicao():
 	def __init__(self, soup, palavra, categoria):
@@ -74,8 +76,8 @@ def printSignificado(registos, n):
 		d for r in registos
 			for d in getDefinicoes(r, r.span.b.contents[0])]
 	try:
-		if n == 0 :
-			mylib.print_console('Encontrados ' + str(len(registos)))
+		if n == 0:
+			mylib.print_console("%d definições encontradas\002;\002 ? %s 1 para a próxima." % (len(registos), palavra))
 		mylib.print_console( registos[n].__repr__())
 	except IndexError:
 		mylib.print_console(str(n) + ' de ' + str(len(registos)) + ' nao encontrado')
