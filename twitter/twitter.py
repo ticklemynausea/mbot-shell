@@ -20,20 +20,19 @@ if len(sys.argv) < 2:
 user = sys.argv[1]
 try:
   n = int(sys.argv[2])
-except IndexError:
-  n = 0
-except ValueError:
+except (IndexError, ValueError):
   n = 0
 
 try:
   t = pytwitter.Api(consumer_key = 'laKcPz3kAAH3TVz8wIRAA', consumer_secret = 'P7CD74v1ea5dO9JvJvv0blAmZaGmhQebAJIH2XLCI', access_token_key = '1523563723-gcn8yyeFiGK1PlxfnoPve9j0QWO3OVP2qyfhTCs', access_token_secret = 'QihKi7KCPFD7n9Yq3AFXDgWVc2vO3dmlzhClgsDxrU0')
+  username = t.GetUser(None, user)._screen_name
   tweets = t.GetUserTimeline(None, user)
-  tweet = tweets[n].GetText().encode('utf8').replace('\n', ' ')
-  print_console("%s %s: %s" % (L, user, tweet))
+  if not tweets:
+    print_console("%s User: %s has no tweets" % (L, username))
+    exit(-1)
+  else:
+    tweet = tweets[n].GetText().encode('utf8').replace('\n', ' ')
+    print_console("%s @%s: %s" % (L, username, tweet))
 except pytwitter.TwitterError as e:
-  err_msg = e.message[0].get('message').encode('utf8')
-  err_code = str(e.message[0].get('code'))
-  print_console("%s Code: %s - %s" % (L, err_code, err_msg))
+  print_console("%s Error: %s" % (L, e))
   exit(-1)
-
-
