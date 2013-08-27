@@ -4,17 +4,19 @@
 
 A=("carneiro" "touro" "gemeos" "carangueijo" "leao" "virgem" "balanca" "escorpiao" "sagitario" "capricornio" "aquario" "peixes")
 
+I=${1//[^a-z]/}
+
 S=1
 for B in ${A[@]}
 do
-	if [ "$B" == "$1" ]
+	if [ "$B" == "$I" ]
 	then
 		break
 	fi
 	((S++))
 done
 
-if [ $S == 13 ]
+if [ $S -gt 12 ]
 then
 	echo "!maya ["${A[*]}"]"
 	exit
