@@ -44,9 +44,9 @@ if __name__=="__main__":
 	if tl not in LANGS :
 		tl = sl
 		sl = "auto"
-		q = "".join(q[1:])
+		q = " ".join(q[1:])
 	else:
-		q = "".join(q[2:])
+		q = " ".join(q[2:])
 
 	par = {
 		'client' : 't',
