@@ -26,13 +26,16 @@ except (IndexError, ValueError):
 try:
   t = pytwitter.Api(consumer_key = 'laKcPz3kAAH3TVz8wIRAA', consumer_secret = 'P7CD74v1ea5dO9JvJvv0blAmZaGmhQebAJIH2XLCI', access_token_key = '1523563723-gcn8yyeFiGK1PlxfnoPve9j0QWO3OVP2qyfhTCs', access_token_secret = 'QihKi7KCPFD7n9Yq3AFXDgWVc2vO3dmlzhClgsDxrU0')
   username = t.GetUser(None, user)._screen_name
-  tweets = t.GetUserTimeline(None, user)
+  tweets = t.GetUserTimeline(None, screen_name = username, count = 100)
   if not tweets:
     print_console("%s User: %s has no tweets" % (L, username))
     exit(-1)
   else:
-    tweet = tweets[n].GetText().encode('utf8').replace('\n', ' ')
+    tweet = tweets[n].GetText().replace('\n', ' ')
     print_console("%s @%s: %s" % (L, username, tweet))
 except pytwitter.TwitterError as e:
   print_console("%s Error: %s" % (L, e))
+  exit(-1)
+except IndexError:
+  print_console("%s Error: YOU'VE GONE TOO FAR (keep below 100)" % (L))
   exit(-1)
