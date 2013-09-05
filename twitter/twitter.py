@@ -1,6 +1,7 @@
 import re
 import sys
 import os
+from HTMLParser import HTMLParser
 import pytwitter
 
 # ../mylib.py
@@ -32,6 +33,7 @@ try:
     exit(-1)
   else:
     tweet = tweets[n].GetText().replace('\n', ' ')
+    tweet = HTMLParser().unescape(tweet)
     print_console("%s @%s: %s" % (L, username, tweet))
 except pytwitter.TwitterError as e:
   print_console("%s Error: %s" % (L, e))
