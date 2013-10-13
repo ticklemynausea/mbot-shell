@@ -25,7 +25,8 @@ LANGS = [
 	"tr","uk","ur","vi","cy","yi"]
 
 def help():
-	mylib.print_console(".tr [form(default:auto)] <to> <texto>")
+	mylib.print_console(".tr [from] <to> <text>")
+	mylib.print_console("languages: " + " ".join(LANGS))
 
 if __name__=="__main__":
 	q = sys.argv[1:]
@@ -38,6 +39,7 @@ if __name__=="__main__":
 	sl = q[0]
 
 	if sl not in LANGS :
+		help()
 		exit(0)
 
 	tl = q[1]
@@ -74,7 +76,7 @@ if __name__=="__main__":
 	res = res.replace(",,",",\"\",") # XXX triple comas :P
 	res = json.loads(res)
 	
-	mylib.print_console("\002%s\002 %s" % (res[2], res[0][0][0]))
+	mylib.print_console("\002[%s>%s]\002 %s" % (res[2], tl, res[0][0][0]))
 
 
 # vim: ts=4:sw=4
