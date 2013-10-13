@@ -36,7 +36,9 @@ try:
     tweet = HTMLParser().unescape(tweet)
     print_console("%s @%s: %s" % (L, username, tweet))
 except pytwitter.TwitterError as e:
-  print_console("%s Error: %s" % (L, e))
+  print_console("%s nope" % L)
+  #print_console("%s Error: %s" % (L, e))
+  print >> sys.stderr, "Twitter error %s" % e
   exit(-1)
 except IndexError:
   print_console("%s Error: YOU'VE GONE TOO FAR (keep below 100)" % (L))
