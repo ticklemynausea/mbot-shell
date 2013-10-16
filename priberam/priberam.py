@@ -1,127 +1,154 @@
 # coding=utf8
 #!/usr/bin/env python
 
-import sys, os, urllib2
+import sys, os, urllib, urllib2, re
+from types import NoneType
 from BeautifulSoup import BeautifulSoup
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import mylib
 
 """
--PARTIR OUTPUT
-
+TODO:
+-categorias
+-conjuga
 """
 
 L = "13,16Priberam" 
 
-URL = 'http://www.priberam.pt/DLPO/default.aspx?pal='
-
-palavra = None
-
-class Definicao():
-	def __init__(self, soup, palavra, categoria):
-		self.soup = soup
-		self.palavra = palavra
-		self.categoria = categoria
-
-	def contents(self):
-		defs = []
-		for c in self.soup.findAll(recursive=False):
-			if not attr(c, 'class', "varpb") :
-				defs += c.findAll(text=True)
-
-		o = [s.replace("\t", " ") for s in defs]
-		o = ''.join(o)
-
-		# marcar linhas e remover \n
-		o = [w.strip() for w in o.split('\n')]
-		o = [w + '\002;\002 ' if len(w) > 1 else w for w in o]
-		o = ''.join(o)
-
-		return o
-		
-	def __repr__(self):
-		return '\002' + self.palavra + '\002 ' + self.categoria + ' ' + self.contents()
-		
-
+URL = 'http://www.priberam.pt/dlpo/%s'
+CONJURL = 'http://www.priberam.pt/dlpo/Conjugar/%s'
 
 def usage():
-	print_console(L + " Usage: !dic palavra [index]")
-	exit(-1)
+ print_console(L + " Usage: !dic palavra [index]")
+ exit(-1)
 
-def attr(soup, attr, value):
-	try:
-		if soup[attr] == value :
-			return True
-	except KeyError:
-		pass
-	return False
+def str_is_int(s):
+  try:
+    n = int(s)
+    return (True, n)
+  except ValueError:
+    return (False, s)
 
-def getDefinicoes(r, palavra, categoria=''):
-	defs = []
-	for c in r.findAll(recursive=False):
-		if attr(c, 'class', "varpb") :
-			pass
-		elif attr(c, 'class', "varpt") :
-			categoria = c.div.i.categoria.contents[0]
-		elif attr(c, 'style', "padding-left:12px;") :
-			defs.append(Definicao(c, palavra, categoria))
-		elif attr(c, 'class', "") and c.name == "span":
-			defs = defs + getDefinicoes(c, palavra, categoria)
 
-	return defs
+def getIndex(argv) :
+  p, n = str_is_int(argv[-1])
+  if p:
+    q = " ".join(argv[:-1])
+  else :
+	q, n = " ".join(argv), 1
 
-def printSignificado(registos, n):
-	registos = [
-		d for r in registos
-			for d in getDefinicoes(r, r.span.b.contents[0])]
-	try:
-		if n == 0:
-			mylib.print_console("%d definições encontradas\002;\002 ? %s 1 para a próxima." % (len(registos), palavra))
-		mylib.print_console( registos[n].__repr__())
-	except IndexError:
-		mylib.print_console(str(n) + ' de ' + str(len(registos)) + ' nao encontrado')
-	return
+  return q, n
 
-def procura(palavra, n = 0):
-	#try:
-		req = urllib2.Request(URL + palavra)
-		open_req = urllib2.urlopen(req)
-		content = open_req.read()	
-		soup = BeautifulSoup(content, fromEncoding="utf-8") # bad META na pagina
 
-		definicao = soup.find(id="DivDefinicao")
+def procura(pesquisa, indice = 1):
+  if indice < 1:
+    return
 
-		registos = definicao.findAll("div", {"registo": "true"})
-		if len(registos) > 0 :
-			# com resultados!
-			return printSignificado(registos, n)
-				 		
-		sugestoes = definicao.findAll("div", {"id": "FormataSugestoesENaoEncontrados"})
-		if len(sugestoes) > 0 :
-			# sem resultados :(
-			sugestoes = [''.join(s.findAll(text=True)) for s in sugestoes]
-			mylib.print_console('\002Sugestoes:\002 ' + ', '.join(sugestoes))
-			return
-		
-		# sem resultados nem sugestoes :((
-		mylib.print_console('\002Palavra nao encontrada\002')
+  parametro = urllib.quote(pesquisa)
+  pagina = urllib2.urlopen(URL % parametro)  
+  pagina = pagina.read()
+  sopa = BeautifulSoup(pagina, fromEncoding="utf-8")
 
-	#except Exception:
-	#	print_console("Erro ao tentar obter o conteudo.")
-	#	exit(-1)
+  definicoes = sopa.find("div", {"class":"pb-main-content"})
+  definicoes = definicoes.findAll("p")
+
+  contagem = len(definicoes)
+
+  # sugestões
+  if contagem < 1 :
+    p = sopa.find("div", {"class":"pb-sugestoes-proximas"})
+    a = sopa.find("div", {"class":"pb-sugestoes-afastadas"})
+
+    resultado = []
+    if type(p) is not NoneType :
+      resultado = resultado + p.findAll('a', text=True)
+
+    if len(a) > 0 :
+      resultado = resultado + a.findAll('a', text=True)
+
+    if len(resultado) <= 0:
+      mylib.print_console('Palavra não encontrada.')
+      return
+
+    resultado = ''.join(resultado)
+    resultado = ' '.join([w.strip() for w in resultado.split('\n')])
+
+    mylib.print_console('%s sugestes:%s.' % (pesquisa, resultado))
+    return
+
+  if indice > contagem :
+    return
+
+  if contagem > 1 and indice == 1 :
+    mylib.print_console("%d definições encontradas\002;\002 ? %s 2 para a próxima." % (contagem, pesquisa))
+
+  definicao = definicoes[indice - 1]
+
+  # remover cocó pt_BR
+  for br in definicao.findAll('span', {'class' :'varpb'}, recursive=True) :
+    br.extract()
+
+  # formatação
+  resultado = ''.join(definicao.findAll(text=True))
+  resultado = [w.strip().replace("=", " = ") for w in resultado.split('\n')]
+  #resultado = [w + '\002;\002 ' if len(w) > 1 else w for w in resultado]
+  resultado = ''.join(resultado)
+
+  mylib.print_console('\002%s \002%s' % (pesquisa, resultado))
+
+
+def conjuga(verbo, indice = 1):
+  if indice < 1:
+    return
+  
+  par = urllib.quote(verbo)
+  res = urllib2.urlopen(CONJURL % par)  
+  content = res.read()
+
+  # sacar aquele HTML de dentro do HTML XD
+  expressao_regular = re.compile(r'<section>(.*)</section>', re.DOTALL)
+  match = re.findall(expressao_regular, content)
+  sopa = BeautifulSoup(match[0], fromEncoding="utf-8")
+  conteudo = sopa.find("div", {"class":"clearfix"})
+  conteudo = conteudo.findAll("div", recursive=False)  
+
+  categoria = ""
+  conjugacao = []
+  for d in conteudo :
+    c = d['class']
+    if c == 'tdHEAD' :
+      categoria = ''.join(d.contents)
+    elif c == 'wrapCONJ' : 
+      tempo = d.findAll('div', {'class':'thCONJ'})
+      tempo = ''.join([''.join(f.contents) for f in tempo])
+
+      flexoes = d.findAll('div', {'class':'tdCONJ'})
+      flexoes = ''.join([' '.join(f.findAll(text=True)) for f in flexoes])
+      #flexoes = ''.join([' '.join(f.contents) for f in flexoes])
+      flexoes = ''.join([w.replace('.', '') for w in flexoes.split('\n')])
+
+      conjugacao.append('%s %s do verbo \002%s\002: %s' % (tempo, categoria, verbo, flexoes))
+
+  contagem = len(conjugacao)
+
+  if indice > contagem :
+    return
+
+  if contagem > 1 and indice == 1 :
+    mylib.print_console("%d tempos verbais encontrados\002;\002 ? %s 2 para o próximo." % (contagem, verbo))
+
+  mylib.print_console(conjugacao[indice - 1])
+
 
 if __name__=="__main__":
+  if len(sys.argv) < 2:
+    # usage()
+    exit(-1)
 
-	if len(sys.argv) < 2:
-		# usage()
-		exit(-1)
+  if sys.argv[1] == 'conjuga' and len(sys.argv) > 2 :
+    conjuga(*getIndex(sys.argv[2:]))
+  else: 
+    procura(*getIndex(sys.argv[1:]))
 
-	palavra = sys.argv[1]
-		
-	if len(sys.argv) == 2:
-		procura(palavra, 0)
-	elif len(sys.argv) == 3:
-		procura(palavra, int(sys.argv[2]))
-
-	
+   
