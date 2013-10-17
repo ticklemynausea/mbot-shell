@@ -1,12 +1,11 @@
 import re
 import sys
 import os
-from HTMLParser import HTMLParser
 import pytwitter
 
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from mylib import print_console, strip
+from mylib import print_console, unescape
 
 
 L = "0,10Twitter" 
@@ -32,8 +31,8 @@ try:
     print_console("%s User: %s has no tweets" % (L, username))
     exit(-1)
   else:
-    tweet = tweets[n].GetText().replace('\n', ' ')
-    tweet = HTMLParser().unescape(tweet)
+    tweet = tweets[n].GetText()
+    tweet = unescape(tweet).replace('\n', ' ')
     print_console("%s @%s: %s" % (L, username, tweet))
 except pytwitter.TwitterError as e:
   print_console("%s nope" % L)

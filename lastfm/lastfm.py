@@ -13,6 +13,11 @@ LEL = "0,5last.fm"
 NUM_EVENTS = 5
 USERFILE = 'lastfm.users'
 CHART_LENGTH = 10
+PRETTY_BAR = ["[4====            ]",
+              "[4====7====        ]",
+              "[4====7====8====    ]",
+              "[4====7====8====9====]",
+              "[                ]"]
 
 def man():
   print_console(LEL + " available commands:")
@@ -158,12 +163,19 @@ class LastFM:
       exit(-1)
 
     comparison_index = round(float(comparison[0]),2)*100
+    if comparison_index < 1.0:
+      bar = PRETTY_BAR[4]
+    else:
+      bar = PRETTY_BAR[int(comparison_index / 25.01)]
+
     artist_list = comparison[1]
+    if artist_list:
+      parsed_list = [str(item) for item in artist_list]
+      chart_text = ", ".join(parsed_list);
+    else:
+      chart_text = "N/A"
 
-    parsed_list = [item.__str__() for item in artist_list]
-
-    chart_text = ", ".join(parsed_list);
-    print_console(LEL + " Comparison between %s and %s: Similarity: %d%% - Common Artists: %s" % (user, user2, comparison_index, chart_text))
+    print_console(LEL + " Comparison: %s %s %s: Similarity: %d%% - Common Artists: %s" % (user, bar, user2, comparison_index, chart_text))
 
   def get_artist_info(self, artist):
     try:
