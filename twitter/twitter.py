@@ -6,7 +6,7 @@ import pytwitter
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console, unescape
-
+from apikeys import consumer_key, consumer_secret, access_token_key, access_token_secret
 
 L = "0,10twitter"
 
@@ -55,10 +55,10 @@ except (IndexError, ValueError):
   n = 0
 
 try:
-  t = pytwitter.Api(consumer_key = 'laKcPz3kAAH3TVz8wIRAA',
-                    consumer_secret = 'P7CD74v1ea5dO9JvJvv0blAmZaGmhQebAJIH2XLCI',
-                    access_token_key = '1523563723-gcn8yyeFiGK1PlxfnoPve9j0QWO3OVP2qyfhTCs',
-                    access_token_secret = 'QihKi7KCPFD7n9Yq3AFXDgWVc2vO3dmlzhClgsDxrU0'
+  t = pytwitter.Api(consumer_key,
+                    consumer_secret,
+                    access_token_key,
+                    access_token_secret
                    )
           
   if (query[0] == '#'):
