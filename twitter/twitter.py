@@ -17,8 +17,9 @@ def search(query, n):
       print_console("%s No results for %s" % (L, query))
       exit(-1)
     else:
+      user = results[n].GetUser()._screen_name
       tweet = unescape(results[n].GetText()).replace('\n', ' ')
-      print_console("%s %s" % (L, tweet))
+      print_console("%s @%s: %s" % (L, user, tweet))
   except IndexError:
     print_console("%s Error: YOU'VE GONE TOO FAR (keep below 15)" % (L))
     exit(-1)
