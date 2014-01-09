@@ -369,10 +369,7 @@ elif query == "artistinfo":
 elif query == "artistevents":
   LastFM().get_artist_events(artist)  
 elif query == "nowplaying":
-  if user.lower() == "ticksound":
-    print_console(LEL + " tickSound is now playing: Justin Bieber - Baby (600 plays, baby, better than radiohead, bieber, black metal, brutal death metal, emo, fag)");
-  else:
-    LastFM().get_now_playing(user)
+  LastFM().get_now_playing(user)
 elif query == "setuser":
   LastFM().set_user(nick, user)
 else:
