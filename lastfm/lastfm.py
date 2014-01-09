@@ -8,10 +8,11 @@ import pickle
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
+from apikeys import api_key, api_secret
 
 LEL = "0,5last.fm"
 NUM_EVENTS = 5
-USERFILE = 'lastfm.users'
+USERFILE = '/home/irc/mbot/lastfm-data/lastfm.users'
 CHART_LENGTH = 10
 PRETTY_BAR = ["[4====            ]",
               "[4====7====        ]",
@@ -29,9 +30,6 @@ def man():
 class LastFM:
 
   def __init__(self, proxy_host = None, proxy_port = None, proxy_enabled = False):
-    (api_key, api_secret) = \
-      ("fce0a7524bf2174e465cc2164029bf1f", "5ae9f52609c10a67d8b628f17fd69adc")
-
     api = pylast.LastFMNetwork(api_key, api_secret)
     if proxy_enabled:
       api.enable_proxy(host = proxy_host, port = proxy_port)
@@ -371,7 +369,10 @@ elif query == "artistinfo":
 elif query == "artistevents":
   LastFM().get_artist_events(artist)  
 elif query == "nowplaying":
-  LastFM().get_now_playing(user)
+  if user.lower() == "ticksound":
+    print_console(LEL + " tickSound is now playing: Justin Bieber - Baby (600 plays, baby, better than radiohead, bieber, black metal, brutal death metal, emo, fag)");
+  else:
+    LastFM().get_now_playing(user)
 elif query == "setuser":
   LastFM().set_user(nick, user)
 else:
