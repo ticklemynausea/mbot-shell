@@ -41,7 +41,7 @@ def getTweet(user, n):
 
 
 def usage():
-  print_console "%s Usage: !twitter username [n] || Search: !twitter #hashtag [n]" % L
+  print_console("%s Usage: !twitter username [n] || Search: !twitter #hashtag [n]" % L)
   exit(-1)
 
 if len(sys.argv) < 2:
