@@ -103,13 +103,17 @@ if is_valid_ip(arg):
   except socket.herror:
     host = ""
 else:
-  ip = socket.gethostbyname(arg)
-
   try:
-    host = socket.gethostbyaddr(ip)
-    host = host[0]
-  except socket.herror:
-    host = ""
+    ip = socket.gethostbyname(arg)
+    try:
+      host = socket.gethostbyaddr(ip)
+      host = host[0]
+    except socket.herror:
+      host = ""
+
+  except socket.gaierror as e:
+    print_console(e[1])
+    sys.exit(-1)
 
 
 url = "http://www.maxmind.com/geoip/v2.0/omni/%s?demo=1"
@@ -165,10 +169,10 @@ try:
 
 
   if "city" in js.keys():
-    s += "City %s (%s%%); " % (js["city"]["names"]["en"], js["city"]["confidence"])
+    s += "City: %s (%s%%); " % (js["city"]["names"]["en"], js["city"]["confidence"])
 
   if "country" in js.keys():
-    s += "Country %s (%s%%); " % (js["country"]["names"]["en"], js["country"]["confidence"])
+    s += "Country: %s (%s%%); " % (js["country"]["names"]["en"], js["country"]["confidence"])
 
   if "location" in js.keys():
     s += u"%skm from %s\u00b0N %s\u00b0E; " % \
