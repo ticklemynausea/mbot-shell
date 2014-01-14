@@ -64,7 +64,7 @@ def procura(pesquisa, indice = 1):
     if type(p) is not NoneType :
       resultado = resultado + p.findAll('a', text=True)
 
-    if len(a) > 0 :
+    if type(a) is not NoneType and len(a) > 0 :
       resultado = resultado + a.findAll('a', text=True)
 
     if len(resultado) <= 0:
@@ -95,7 +95,7 @@ def procura(pesquisa, indice = 1):
   #resultado = [w + '\002;\002 ' if len(w) > 1 else w for w in resultado]
   resultado = ''.join(resultado)
 
-  mylib.print_console('\002%s \002%s' % (pesquisa, resultado))
+  mylib.print_console('\002%s \002%s' % (pesquisa, resultado.encode('utf-8')))
 
 
 def conjuga(verbo, indice = 1):
