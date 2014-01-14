@@ -1,7 +1,8 @@
 use Weather::Underground;
 use strict;
 use warnings;
-
+use utf8;
+binmode(STDOUT, ":utf8");
 if ($#ARGV == -1) {
   print "Usage: !weather <location>. Try: 'City', 'City, State', 'State', 'State, Country' and 'Country'.\n";
   exit(-1);
@@ -24,7 +25,7 @@ foreach (@$arrayref) {
 
   $d = $_->{"celsius"};
   if ($d ne "") {
-    $response .= "$dºC";
+    $response .= "$d"."ºC";
   }
 
   $d = $_->{"conditions"};
@@ -82,7 +83,6 @@ foreach (@$arrayref) {
   #  }
 
   print $response."\n";
-
 }
 
 
