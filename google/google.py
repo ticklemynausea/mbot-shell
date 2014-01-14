@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import urllib
 import sys
 import os
@@ -25,8 +26,12 @@ results = json['responseData']['results']
 
 i = 0
 for result in results[:3]:
+ i += 1
  title = strip(unescape(result['title'].replace("<b>","").replace("</b>", "")))
  url = urllib.unquote(result['url'])   # was URL in the original and that threw a name error exception
- string = string + "%s (%s); " % (title, url)
+ string = string + u"%s (%s); " % (title, url)
 
-print_console("%s: %s" % (string, url))
+if i > 0:
+  print_console("%s: %s" % (string, url))
+else:
+  print_console("No results!")
