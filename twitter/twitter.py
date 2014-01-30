@@ -51,6 +51,13 @@ if len(sys.argv) < 2:
 query = sys.argv[1]
 try:
   n = int(sys.argv[2])
+
+  # 1-based indices
+  if n < 1:
+    n = 0
+  else:
+    n = n - 1
+
 except (IndexError, ValueError):
   n = 0
 
