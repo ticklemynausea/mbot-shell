@@ -8,7 +8,7 @@ from mylib import unescape, strip, print_console
 logo = '3::54chan'
 
 def man():
-  print_console("%s Usage: !4chan <board> <index> OR <board> <search terms> [index]" % logo)
+  print_console("%s Usage: !4chan <board> [index] OR <board> <search terms> [index]" % logo)
 
 def format(comment):
 
@@ -40,7 +40,7 @@ def search(board, search):
           
         boardLink = 'https://boards.4chan.org/%s/thread/%s' % (board, j['no'])
 
-        text = '%s /%s/ | %s | %s | %s (R:%s, I:%s)' % (logo, board, subject, post, boardLink, j['replies'], j['images'])
+        text = '%s: /%s/ | %s | %s | %s (R:%s, I:%s)' % (logo, board, subject, post, boardLink, j['replies'], j['images'])
         res.append(text)
   return res
 
@@ -54,7 +54,7 @@ def getValidBoards():
 
   return boards
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 2:
   man()
   exit(1)
 
@@ -84,9 +84,15 @@ total = len(res)
 
 if res:
   try:
-    print_console("%d/%d | %s" % (index + 1, total, res[index]))
+    print_console(res[index])
+    if terms:
+      print_console("%s %d threads found! '!4chan %s %d' for the next one" % (logo, total, terms, index + 2))
+    else:
+      print_console("%s %d threads found! '!4chan %s %d' for the next one" % (logo, total, board, index + 2))
   except(IndexError):
-    print_console("%s: Out of bounds! Only %d threads available with '%s' on /%s/" % (logo, total, terms, board))
-
+    if terms:
+      print_console("%s: Out of bounds! Only %d threads available with '%s' on /%s/" % (logo, total, terms, board))
+    else:
+      print_console("%s: Out of bounds! Only %d threads available on /%s/" % (logo, total, board))
 else:
-  print_console("No results for %s on /%s/" % (terms, board))
+  print_console("No results for '%s' on /%s/" % (terms, board))
