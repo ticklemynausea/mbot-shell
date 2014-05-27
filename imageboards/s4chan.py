@@ -76,7 +76,7 @@ except(ValueError):
 
 
 if board not in getValidBoards():
-  print_console("/%s/ is not a real board" % board)
+  print_console("%s: /%s/ is not a real board" % (logo, board))
   exit(1)
 
 res = search(board, terms)
@@ -86,13 +86,13 @@ if res:
   try:
     print_console(res[index])
     if terms:
-      print_console("%s %d threads found! '!4chan %s %d' for the next one" % (logo, total, terms, index + 2))
+      print_console("%s: %d threads found! '!4chan %s %d' for the next one" % (logo, total, terms, index + 2))
     else:
-      print_console("%s %d threads found! '!4chan %s %d' for the next one" % (logo, total, board, index + 2))
+      print_console("%s: %d threads found! '!4chan %s %d' for the next one" % (logo, total, board, index + 2))
   except(IndexError):
     if terms:
       print_console("%s: Out of bounds! Only %d threads available with '%s' on /%s/" % (logo, total, terms, board))
     else:
       print_console("%s: Out of bounds! Only %d threads available on /%s/" % (logo, total, board))
 else:
-  print_console("No results for '%s' on /%s/" % (terms, board))
+  print_console("%s: No results for '%s' on /%s/" % (logo, terms, board))
