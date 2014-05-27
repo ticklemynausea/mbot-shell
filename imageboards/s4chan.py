@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys
 import urllib, json
 
@@ -5,10 +6,12 @@ import urllib, json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import unescape, strip, print_console
 
-logo = '3::54chan'
+logo = '54chan 3::5'
+logo_1 = '54chan'
+logo_2 = '3::'
 
 def man():
-  print_console("%s Usage: !4chan <board> [index] OR <board> <search terms> [index]" % logo)
+  print_console("%s Usage: .4 <board> [index] OR .4 <board> <search terms> [index]" % logo)
 
 def format(comment):
 
@@ -39,8 +42,12 @@ def search(board, search):
           post = post[:100] + '...' #close color here also
           
         boardLink = 'https://boards.4chan.org/%s/thread/%s' % (board, j['no'])
-
-        text = '%s: /%s/ | %s | %s | %s (R:%s, I:%s)' % (logo, board, subject, post, boardLink, j['replies'], j['images'])
+        if subject == 'No subject':
+          text = u'/%s/ · %s · %s (R:%s, I:%s)' % \
+            (board, post, boardLink, j['replies'], j['images'])
+        else:
+          text = u'/%s/ · %s · %s · %s (R:%s, I:%s)' % \
+            (board, subject, post, boardLink, j['replies'], j['images'])
         res.append(text)
   return res
 
@@ -76,7 +83,7 @@ except(ValueError):
 
 
 if board not in getValidBoards():
-  print_console("%s: /%s/ is not a real board" % (logo, board))
+  print_console("%s /%s/ is not a real board" % (logo, board))
   exit(1)
 
 res = search(board, terms)
@@ -84,15 +91,21 @@ total = len(res)
 
 if res:
   try:
-    print_console(res[index])
-    if terms:
-      print_console("%s: %d threads found! '!4chan %s %d' for the next one" % (logo, total, terms, index + 2))
-    else:
-      print_console("%s: %d threads found! '!4chan %s %d' for the next one" % (logo, total, board, index + 2))
+    s = res[index]
+    if total > 1 and index + 1 < total:
+      logo = logo_1;
+      if terms:
+        print_console("%s %d threads found! '.4 %s %s %d' for the next one" \
+            % (logo, total, board, terms, index + 2))
+      else:
+        print_console("%s %d threads found! '.4 %s %d' for the next one" \
+            % (logo, total, board, index + 2))
+      logo = logo_2;
+    print_console("%s %s" % (logo, s))
   except(IndexError):
     if terms:
-      print_console("%s: Out of bounds! Only %d threads available with '%s' on /%s/" % (logo, total, terms, board))
+      print_console("%s Out of bounds! Only %d threads available with '%s' on /%s/" % (logo, total, terms, board))
     else:
-      print_console("%s: Out of bounds! Only %d threads available on /%s/" % (logo, total, board))
+      print_console("%s Out of bounds! Only %d threads available on /%s/" % (logo, total, board))
 else:
-  print_console("%s: No results for '%s' on /%s/" % (logo, terms, board))
+  print_console("%s No results for '%s' on /%s/" % (logo, terms, board))
