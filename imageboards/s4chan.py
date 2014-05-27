@@ -8,7 +8,7 @@ from mylib import unescape, strip, print_console
 logo = '3::54chan'
 
 def man():
-  print_console("Usage: .s4 <board> <search terms> [1-based index]")
+  print_console("%s Usage: !4chan <board> <index> OR <board> <search terms> [index]" % logo)
 
 def format(comment):
 
@@ -30,7 +30,7 @@ def search(board, search):
   for i in catalog:
     for j in i['threads']:
       if search.lower() in j.get('sub', '').lower() or search.lower() in j.get('com', '').lower():
-        subject = j.get('sub', 'Empty subject')
+        subject = j.get('sub', 'No subject')
         subject = unescape(subject)
         post = j.get('com', 'Empty post')
         post = format(post)
