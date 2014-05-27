@@ -8,7 +8,7 @@ from mylib import unescape, strip, print_console
 logo = '3::54chan'
 
 def man():
-  print_console("Usage: !4chan <board> <search terms>")
+  print_console("Usage: .s4 <board> <search terms> [1-based index]")
 
 def format(comment):
 
@@ -25,27 +25,24 @@ def format(comment):
 def search(board, search):
   res = []
 
-  try:
-    catalog = json.load(urllib.urlopen('https://a.4cdn.org/%s/catalog.json' % board))
-  
-    for i in catalog:
-      for j in i['threads']:
-        if search.lower() in j.get('sub', '').lower() or search.lower() in j.get('com', '').lower():
-          subject = j.get('sub', 'Empty subject')
-          subject = unescape(subject)
-          post = j.get('com', 'Empty post')
-          post = format(post)
-  
-          if len(post) > 100:
-            post = post[:100] + '...' #close color here also
-            
-          boardLink = 'https://boards.4chan.org/%s/thread/%s' % (board, j['no'])
-  
-          text = '%s /%s/ | %s | %s | %s (R:%s, I:%s)' % (logo, board, subject, post, boardLink, j['replies'], j['images'])
-          res.append(text)
-    return res
-  except(IOError):
-    return ['%s Error: Try again later' % logo]
+  catalog = json.load(urllib.urlopen('https://a.4cdn.org/%s/catalog.json' % board))
+
+  for i in catalog:
+    for j in i['threads']:
+      if search.lower() in j.get('sub', '').lower() or search.lower() in j.get('com', '').lower():
+        subject = j.get('sub', 'Empty subject')
+        subject = unescape(subject)
+        post = j.get('com', 'Empty post')
+        post = format(post)
+
+        if len(post) > 100:
+          post = post[:100] + '...' #close color here also
+          
+        boardLink = 'https://boards.4chan.org/%s/thread/%s' % (board, j['no'])
+
+        text = '%s /%s/ | %s | %s | %s (R:%s, I:%s)' % (logo, board, subject, post, boardLink, j['replies'], j['images'])
+        res.append(text)
+  return res
 
 def getValidBoards():
   boards = []
@@ -62,15 +59,34 @@ if len(sys.argv) < 3:
   exit(1)
 
 board = sys.argv[1]
-terms = " ".join(sys.argv[2:])
+terms = " ".join(sys.argv[2:-1])
+
+try:
+  index = int(sys.argv[-1])
+  
+  # One-based index
+  if index < 1:
+    index = 0
+  else:
+    index -= 1
+    
+except(ValueError):
+  index = 0
+  terms = " ".join(sys.argv[2:])
+
 
 if board not in getValidBoards():
   print_console("/%s/ is not a real board" % board)
   exit(1)
 
 res = search(board, terms)
+total = len(res)
+
 if res:
-  for i in res[:2]:
-    print_console(i)
+  try:
+    print_console("%d/%d | %s" % (index + 1, total, res[index]))
+  except(IndexError):
+    print_console("%s: Out of bounds! Only %d threads available with '%s' on /%s/" % (logo, total, terms, board))
+
 else:
   print_console("No results for %s on /%s/" % (terms, board))
