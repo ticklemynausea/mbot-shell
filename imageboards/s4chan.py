@@ -6,13 +6,11 @@ import urllib, json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import unescape, strip, print_console
 
-logo = '54chan 3::5'
-logo_1 = '54chan'
-logo_2 = '3::'
+logo = '3::054chan'
 
 def man():
-  print_console("%s Usage: .4 <board> [index] OR .4 <board> <search terms> [index]" % logo_1)
-  print_console("%s Boards: %s" % (logo_2, " ".join(valid_boards)))
+  print_console("%s Usage: .4 <board> [index] OR .4 <board> <search terms> [index]" % logo)
+  print_console("%s Boards: %s" % (logo, " ".join(valid_boards)))
 
 def format(comment):
 
@@ -85,7 +83,7 @@ except(ValueError):
   terms = " ".join(sys.argv[2:])
 
 if board not in valid_boards:
-  print_console("%s /%s/ is not a real board" % (logo_1, board))
+  print_console("%s /%s/ is not a real board" % (logo, board))
   print_console("%s try: %s" % (logo_2, " ".join(valid_boards)))
   exit(1)
 
@@ -96,14 +94,12 @@ if res:
   try:
     s = res[index]
     if total > 1 and index + 1 < total:
-      logo = logo_1;
       if terms:
         print_console("%s %d threads found! '.4 %s %s %d' for the next one" \
             % (logo, total, board, terms, index + 2))
       else:
         print_console("%s %d threads found! '.4 %s %d' for the next one" \
             % (logo, total, board, index + 2))
-      logo = logo_2;
     print_console("%s %s" % (logo, s))
   except(IndexError):
     if terms:
