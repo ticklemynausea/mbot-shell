@@ -11,7 +11,8 @@ logo_1 = '54chan'
 logo_2 = '3::'
 
 def man():
-  print_console("%s Usage: .4 <board> [index] OR .4 <board> <search terms> [index]" % logo)
+  print_console("%s Usage: .4 <board> [index] OR .4 <board> <search terms> [index]" % logo_1)
+  print_console("%s Boards: %s" % (logo_2, " ".join(valid_boards)))
 
 def format(comment):
 
@@ -61,6 +62,8 @@ def getValidBoards():
 
   return boards
 
+valid_boards = getValidBoards()
+
 if len(sys.argv) < 2:
   man()
   exit(1)
@@ -81,9 +84,9 @@ except(ValueError):
   index = 0
   terms = " ".join(sys.argv[2:])
 
-
-if board not in getValidBoards():
-  print_console("%s /%s/ is not a real board" % (logo, board))
+if board not in valid_boards:
+  print_console("%s /%s/ is not a real board" % (logo_1, board))
+  print_console("%s try: %s" % (logo_2, " ".join(valid_boards)))
   exit(1)
 
 res = search(board, terms)
