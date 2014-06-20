@@ -244,7 +244,6 @@ class LastFM:
     try:
       api_user = self.api.get_user(user)
       track = api_user.get_now_playing()
-      playedstr = "is listening to"
     except pylast.WSError as e:
       print_console(LEL + " WSError %s: %s" % (e.status,e.details))
       exit(-1)
@@ -259,14 +258,13 @@ class LastFM:
         diff = ts_now - ts_track
         if diff <= 300: # Listened to anything in the last 5 minutes
           track = track.track
-          playedstr = "has listened to"
         else:
           track = None
       else:
         track = None
 
     if track is None:
-      print_console(LEL + " %s doesn't seem to have listened to anything in a while" % user)
+      print_console(LEL + " %s hasn't scrobbled anything in a while!" % user)
       return
 
     tags = track.get_top_tags()
@@ -293,7 +291,7 @@ class LastFM:
       return word + "s"
 
     tags = "".join([", " + t.item.__str__() for t in tags[:5]])
-    s = " %s %s: %s (%d %s%s%s)" % (user, playedstr, name, playcount, pluralize("play", playcount), loved, tags)
+    s = " %s %s: %s (%d %s%s%s)" % (user, "is listening to", name, playcount, pluralize("play", playcount), loved, tags)
 
     print_console(LEL + s)
 
