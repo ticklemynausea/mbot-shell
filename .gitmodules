@@ -1,0 +1,3 @@
+[submodule "mariana"]
+	path = mariana
+	url = git://github.com/falsovsky/mariana.git
