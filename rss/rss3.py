@@ -190,7 +190,7 @@ class Feed:
         pass
 
     except Exception as e:
-      print_console(e)
+      print_error(e)
 
     except FileLockException:
       print_error("Lock Timeout")
