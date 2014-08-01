@@ -28,29 +28,32 @@ def help():
   mylib.print_console(".tr [from] <to> <text>")
   mylib.print_console("languages: " + " ".join(LANGS))
 
-if __name__=="__main__":
-  q = sys.argv[1:]
-  l = len(q)
+def parse_args():
+  args = sys.argv[1:]
+  l = len(args)
 
   if l < 2 :
     help()
     exit(0)
 
-  sl = q[0]
+  input_lang = args[0]
 
-  if sl not in LANGS :
+  if input_lang not in LANGS :
     help()
     exit(0)
 
-  tl = q[1]
-  if tl not in LANGS :
-    tl = sl
-    sl = "auto"
-    q = " ".join(q[1:])
+  output_lang = args[1]
+  if output_lang not in LANGS :
+    output_lang = input_lang
+    input_lang = "auto"
+    args = " ".join(args[1:])
   else:
-    q = " ".join(q[2:])
+    args = " ".join(args[2:])
 
-  par = {
+  return (input_lang, output_lang, args)
+
+def api_request(input_lang, output_lang, args):
+  parameters = {
     'client' : 't',
     'hl' : 'pt-PT',
     'ie' : 'UTF-8',
@@ -58,25 +61,31 @@ if __name__=="__main__":
     'oe' : 'UTF-8',
     'otf': '1',
 
-    'q'  : q,
+    'q'  : args,
     'sc' : '2',
-    'sl' : sl, # input language (en, ...)
+    'sl' : input_lang, # input language (en, ...)
     'ssel':'0',
-    'tl' : tl,   # output language
+    'tl' : output_lang,   # output language
     'tsel': '0'
   }
 
-  par = urllib.urlencode(par)
-  head= { 'User-Agent' : 'YoMomma/6.9' }
-  req = urllib2.Request(URL % par, None, head)
-  res = urllib2.urlopen(req)
+  parameters = urllib.urlencode(parameters)
+  head = { 'User-Agent' : 'YoMomma/6.9' }
+  request = urllib2.Request(URL % parameters, None, head)
+  result = urllib2.urlopen(request)
 
-  res = res.read()
-  res = res.replace(",,",",\"\",")
-  res = res.replace(",,",",\"\",") # XXX triple comas :P
-  res = json.loads(res)
+  result = result.read()
+  result = result.replace(",,",",\"\",")
+  result = result.replace(",,",",\"\",") # XXX triple comas :P
+  result = json.loads(result)
   
-  mylib.print_console("\002[%s>%s]\002 %s" % (res[2], tl, res[0][0][0]))
+  return result
 
+def output(output_lang, result):
+  mylib.print_console("\002[%s>%s]\002 %s" % (result[2], output_lang, result[0][0][0]))
 
-# vim: ts=4:sw=4
+if __name__=="__main__":
+
+  (input_lang, output_lang, args) = parse_args()
+  result = api_request(input_lang, output_lang, args)
+  output(output_lang, result);
