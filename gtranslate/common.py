@@ -38,6 +38,11 @@ def api_request(input_lang, output_lang, args):
   result = result.read()
   result = result.replace(",,",",\"\",")
   result = result.replace(",,",",\"\",") # XXX triple comas :P
-  result = json.loads(result)
+  result = result.replace("[,","[") # XXX triple comas :P
+  
+  try:
+    result = json.loads(result)
+  except ValueError:
+    print "ValueError! %s" % result
   
   return result
