@@ -60,7 +60,6 @@ FEEDS = [
   {"id":"weebls", "logo":"Weebls' Stuff", "url":"http://www.weebls-stuff.com/misc/rss/toons.php"},
   {"id":"abola", "logo":"A Bola", "url":"http://www.abola.pt/rss/index.aspx"},
   {"id":"blol", "logo":"blol", "url":"http://blol.org/feed"},
-  {"id":"hackern", "logo":"hacker news", "url":"https://news.ycombinator.com/rss"},
   {"id":"sfocus", "logo":"SecurityFocus", "url":"http://www.securityfocus.com/rss/news.xml"},
   {"id":"zz_resultados", "logo":"ZeroZero: Resultados", "url":"http://www.zerozero.pt/rss/resultados.php"},
   {"id":"zz_noticias", "logo":"ZeroZero", "url":"http://www.zerozero.pt/rss/noticias.php"},
