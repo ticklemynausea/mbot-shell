@@ -24,7 +24,7 @@ socket.setdefaulttimeout(5)
 #
 # constants
 #
-
+PATHFILENAME = "rss-data/%s.feeddata"
 CACHE_LENGTH = 50
 FEEDS = [
   {"id":"b4chan", "logo":"-4chan /b/-", "url":"http://boards.4chan.org/b/index.rss"},
@@ -159,7 +159,7 @@ class Feed:
     self.feedid = feedid
     self.logo = logo
     self.url = url
-    self.feedfile = "rss-data/%s.feeddata" % self.feedid
+    self.feedfile = PATHFILENAME  % self.feedid
     self.entries = []
     self.load()
 
@@ -339,6 +339,9 @@ def usage():
 # main(ly ugly argument parsing)
 #
 #print_error("%s pid start " % os.getpid())
+
+# # #
+sys.setrecursionlimit(1500)
 
 l = len(sys.argv)
 if l < 2:
