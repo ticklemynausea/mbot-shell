@@ -1,5 +1,6 @@
 import pylast
 import sys
+import time
 import os
 import code
 import re
@@ -243,42 +244,56 @@ class LastFM:
     try:
       api_user = self.api.get_user(user)
       track = api_user.get_now_playing()
-
     except pylast.WSError as e:
       print_console(LEL + " WSError %s: %s" % (e.status,e.details))
       exit(-1)
 
     if track is None:
-      print_console(LEL + " %s doesn't seem to be playing anything right now" % user)
-    else:
-
-      tags = track.get_top_tags()
-      if not tags:
-        tags = track.artist.get_top_tags()
-      track = track.get_add_info(user.__str__())
-
-      if track.userloved == "1":
-        loved = " 13<3"
+      # if there is no track with 'now playing' then check recent played tracks
+      tracks = api_user.get_recent_tracks()
+      if len(tracks) > 0:
+        track = tracks[0]
+        ts_track = int(track.timestamp)
+        ts_now = int(time.time())
+        diff = ts_now - ts_track
+        if diff <= 300: # Listened to anything in the last 5 minutes
+          track = track.track
+        else:
+          track = None
       else:
-        loved = ""
+        track = None
 
-      try:
-        playcount = int(track.userplaycount)
-      except (ValueError, TypeError):
-        playcount = 1
+    if track is None:
+      print_console(LEL + " %s hasn't scrobbled anything in a while!" % user)
+      return
 
-      name = track.__str__()
+    tags = track.get_top_tags()
+    if not tags:
+      tags = track.artist.get_top_tags()
+    track = track.get_add_info(user.__str__())
 
-      # dumb pluralization
-      def pluralize(word, count):
-        if count == 1:
-          return word
-        return word + "s"
+    if track.userloved == "1":
+      loved = " 13<3"
+    else:
+      loved = ""
 
-      tags = "".join([", " + t.item.__str__() for t in tags[:5]])
-      s = " %s is now playing: %s (%d %s%s%s)" % (user, name, playcount, pluralize("play", playcount), loved, tags)
+    try:
+      playcount = int(track.userplaycount)
+    except (ValueError, TypeError):
+      playcount = 1
 
-      print_console(LEL + s)
+    name = track.__str__()
+
+    # dumb pluralization
+    def pluralize(word, count):
+      if count == 1:
+        return word
+      return word + "s"
+
+    tags = "".join([", " + t.item.__str__() for t in tags[:5]])
+    s = " %s %s: %s (%d %s%s%s)" % (user, "is listening to", name, playcount, pluralize("play", playcount), loved, tags)
+
+    print_console(LEL + s)
 
   def set_user(self, nick, user):
 
@@ -372,6 +387,9 @@ elif query == "artistinfo":
 elif query == "artistevents":
   LastFM().get_artist_events(artist)
 elif query == "nowplaying":
+  #if user.lower() == "ticksound":
+  #  print_console(LEL + " tickSound is now playing: Justin Bieber - Baby (600 plays, baby, better than radiohead, bieber, black metal, brutal death metal, emo, fag)");
+  #else:
   LastFM().get_now_playing(user)
 elif query == "setuser":
   LastFM().set_user(nick, user)

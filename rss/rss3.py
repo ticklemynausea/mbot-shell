@@ -24,7 +24,7 @@ socket.setdefaulttimeout(5)
 #
 # constants
 #
-
+PATHFILENAME = "rss-data/%s.feeddata"
 CACHE_LENGTH = 50
 FEEDS = [
   {"id":"b4chan", "logo":"-4chan /b/-", "url":"http://boards.4chan.org/b/index.rss"},
@@ -40,16 +40,15 @@ FEEDS = [
   {"id":"xkcd", "logo": "1,0xkcd", "url":"http://xkcd.com/rss.xml"},
   {"id":"mojang", "logo":"Mojang", "url":"http://mojang.com/feed"},
   {"id":"bukkit", "logo":"bukkit", "url":"http://forums.bukkit.org/forums/bukkit-news.2/index.rss"},
+  {"id":"spigot", "logo":"spigot", "url":"http://www.spigotmc.org/forums/news-and-announcements.2/index.rss"},
   {"id":"wotd", "logo":"-palavra do dia-", "url":"http://priberam.pt/dlpo/DoDiaRSS.aspx"},
   {"id":"blitz", "logo":"BLITZ.pt", "url":"http://blitz.aeiou.pt/gen.pl?p=rss"},
   {"id":"smbc", "logo":"smbc", "url":"http://www.smbc-comics.com/rss.php"},
-  {"id":"ptsec", "logo":"ptsec", "url":"https://ptsec.info/wp/feed/"},
   {"id":"kritzkast", "logo":"kritzkast", "url":"http://www.kritzkast.com/feed?cat=-14"},
   {"id":"tf2", "logo":"TF2 Official Blog", "url":"http://www.teamfortress.com/rss.xml"},
   {"id":"universetoday", "logo":"Universe Today", "url":"http://www.universetoday.com/feed/"},
   {"id":"hackernews", "logo":"Hacker News", "url":"http://news.ycombinator.com/rss"},
-  {"id":"sceper", "logo":"Sceper", "url":"http://sceper.eu/feed"},
-  {"id":"thepiratebay", "logo":"ThePirateBay", "url":"https://rss.thepiratebay.se/0"},
+  {"id":"thepiratebay", "logo":"ThePirateBay", "url":"http://rss.thepiratebay.se/0"},
   {"id":"hackaday", "logo":"Hack A Day", "url":"http://www.hackaday.com/rss.xml"},
   {"id":"astronomycast", "logo":"Astronomy Cast", "url":"http://feeds.feedburner.com/astronomycast"},
   {"id":"yt_jamesnintendonerd", "logo":"1,0YOU0,4TUBE JamesNintendoNerd", "url":"http://www.youtube.com/rss/user/JamesNintendoNerd/videos.rss"},
@@ -59,13 +58,18 @@ FEEDS = [
   {"id":"weebls", "logo":"Weebls' Stuff", "url":"http://www.weebls-stuff.com/misc/rss/toons.php"},
   {"id":"abola", "logo":"A Bola", "url":"http://www.abola.pt/rss/index.aspx"},
   {"id":"blol", "logo":"blol", "url":"http://blol.org/feed"},
-  {"id":"hackern", "logo":"hacker news", "url":"https://news.ycombinator.com/rss"},
   {"id":"sfocus", "logo":"SecurityFocus", "url":"http://www.securityfocus.com/rss/news.xml"},
   {"id":"zz_resultados", "logo":"ZeroZero: Resultados", "url":"http://www.zerozero.pt/rss/resultados.php"},
   {"id":"zz_noticias", "logo":"ZeroZero", "url":"http://www.zerozero.pt/rss/noticias.php"},
-  {"id":"cici", "logo":"twitter do cici", "url":"https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=rapzo"},
-  {"id":"minecraftia", "logo":"Minecraftia! RSS", "url":"https://minecraft.ticklemynausea.net/rss"}
-  ##{"id":"", "logo":"", "url":""},
+  {"id":"mcpt", "logo":"Blog MCPT", "url":"http://blog.minecraft.pt/feed/"},
+  {"id":"feup", "logo":"feup news", "url":"http://sigarra.up.pt/feup/pt/noticias_web.rss"},
+  {"id":"vilametal", "logo":"vilametal", "url":"http://vilametal.blogspot.com/feeds/posts/default?alt=rss"},
+  {"id":"blabbermouth", "logo":"blabbermouth.net", "url":"http://feeds.feedburner.com/blabbermouth"},
+  {"id":"yt_tso", "logo":"YouTube ThanatoSchizO", "url":"http://youtube.com/rss/user/thanatoschizo"},
+  {"id":"yt_inl", "logo":"YouTube InsomniousNightLift", "url":"http://youtube.com/rss/user/insomniousnightlift"},
+  {"id":"mcpt-dev", "logo":"13Minecraftia! RSS-DEV", "url":"https://bitbucket.org/ticklemynausea/minecraftia/rss?token=7bd3166f6d3489a0a90060a9509d5782"},
+  {"id":"mcpt-fb", "logo":"0,2facebook minecraft.pt", "url":"https://www.facebook.com/feeds/notifications.php?id=208693402526378&viewer=1042203820&key=AWjYVLgN8nQXI2Vl&format=rss20"},
+  {"id":"irssi-github", "logo":"irssi-github", "url":"https://github.com/irssi/irssi/commits/master.atom"}
 ]
 #
 # :(
@@ -152,7 +156,7 @@ class Feed:
     self.feedid = feedid
     self.logo = logo
     self.url = url
-    self.feedfile = "%s.feeddata" % self.feedid
+    self.feedfile = PATHFILENAME  % self.feedid
     self.entries = []
     self.load()
 
@@ -190,7 +194,7 @@ class Feed:
         pass
 
     except Exception as e:
-      print_console(e)
+      print_error(e)
 
     except FileLockException:
       print_error("Lock Timeout")
@@ -332,6 +336,9 @@ def usage():
 # main(ly ugly argument parsing)
 #
 #print_error("%s pid start " % os.getpid())
+
+# # #
+sys.setrecursionlimit(1500)
 
 l = len(sys.argv)
 if l < 2:
