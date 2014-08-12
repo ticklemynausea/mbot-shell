@@ -13,7 +13,7 @@ my $place = join(" ", @ARGV);
 my $weather = Weather::Underground->new(
   place => $place,
   debug => 0,
-) || die "Error: $@\n";
+) || print "Error: $@\n";
 
 my $arrayref = $weather->get_weather() || die "Error: $@\n";
 
