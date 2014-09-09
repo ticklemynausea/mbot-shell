@@ -21,7 +21,7 @@ def format(comment):
   comment = comment.replace('<span class="deadlink">', '3') #greentext open
   comment = comment.replace('</span>', '') #close color
   comment = strip(comment) #remove the rest of html tags
-  
+
   return comment
 
 def search(board, search):
@@ -39,7 +39,7 @@ def search(board, search):
 
         if len(post) > 100:
           post = post[:100] + '...' #close color here also
-          
+
         boardLink = 'https://boards.4chan.org/%s/thread/%s' % (board, j['no'])
         if subject == 'No subject':
           text = u'/%s/ · %s · %s (R:%s, I:%s)' % \
@@ -71,20 +71,20 @@ terms = " ".join(sys.argv[2:-1])
 
 try:
   index = int(sys.argv[-1])
-  
+
   # One-based index
   if index < 1:
     index = 0
   else:
     index -= 1
-    
+
 except(ValueError):
   index = 0
   terms = " ".join(sys.argv[2:])
 
 if board not in valid_boards:
   print_console("%s /%s/ is not a real board" % (logo, board))
-  print_console("%s try: %s" % (logo_2, " ".join(valid_boards)))
+  print_console("%s try: %s" % (logo, " ".join(valid_boards)))
   exit(1)
 
 res = search(board, terms)
