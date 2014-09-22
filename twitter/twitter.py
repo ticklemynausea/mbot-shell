@@ -1,4 +1,3 @@
-import re
 import sys
 import os
 import pytwitter
@@ -10,9 +9,10 @@ from apikeys import consumer_key, consumer_secret, access_token_key, access_toke
 
 L = "0,10twitter"
 
+
 def search(query, n):
   try:
-    results = t.GetSearch(term = query, result_type = "recent", count = 15)
+    results = t.GetSearch(term=query, result_type="recent", count=15)
     if not results:
       print_console("%s No results for %s" % (L, query))
       exit(-1)
@@ -28,7 +28,7 @@ def search(query, n):
 def getTweet(user, n):
   try:
     username = t.GetUser(None, user)._screen_name
-    tweets = t.GetUserTimeline(None, screen_name = username, count = 100)
+    tweets = t.GetUserTimeline(None, screen_name=username, count=100)
     if not tweets:
       print_console("%s User: %s has no tweets" % (L, username))
       exit(-1)
@@ -65,9 +65,8 @@ try:
   t = pytwitter.Api(consumer_key,
                     consumer_secret,
                     access_token_key,
-                    access_token_secret
-                   )
-          
+                    access_token_secret)
+
   if (query[0] == '#'):
     search(query, n)
   else:
@@ -75,6 +74,6 @@ try:
 
 except pytwitter.TwitterError as e:
   print_console("%s nope" % L)
-  #print_console("%s Error: %s" % (L, e))
+  # print_console("%s Error: %s" % (L, e))
   print >> sys.stderr, "Twitter error %s" % e
   exit(-1)
