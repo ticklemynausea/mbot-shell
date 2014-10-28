@@ -12,7 +12,7 @@ from mylib import print_console
 
 def man():
   # ~:python euromilhoes.py [e | t | j]
-  print_console('Usage: .euromilhoes | .totoloto | .joker')
+  print_console('Usage: !euromilhoes | !totoloto | !joker')
   exit(-1)
 
 
