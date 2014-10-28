@@ -10,6 +10,9 @@ from mylib import print_console
 not_games = ["Electronic Frontier Foundation",
              "American Red Cross",
              "Child's Play Charity",
+             "Mozilla Foundation",
+             "CodeNow",
+             "Maker Education Initiative",
              "More games coming soon!"]
 games = []
 
