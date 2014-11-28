@@ -13,6 +13,8 @@ not_games = ["Electronic Frontier Foundation",
              "Mozilla Foundation",
              "CodeNow",
              "Maker Education Initiative",
+             "Save the Children",
+             "charity: water",
              "More games coming soon!"]
 games = []
 
