@@ -24,9 +24,16 @@ not_games = ["Electronic Frontier Foundation",
 games = []
 
 soup = bs4.BeautifulSoup(requests.get("https://humblebundle.com").text)
-for i in soup.find_all('span', 'game-box'):
-  game = i.find('img')['alt']
-  if game not in not_games and "Soundtrack" not in game:
-    games.append(game)
+res = soup.find_all('span', 'game-box')
 
-print_console(", ".join(games))
+if res:
+  for i in res:
+    game = i.find('img')['alt']
+
+    if game not in not_games and "Soundtrack" not in game:
+      games.append(game)
+
+  print_console(", ".join(games))
+
+else:
+  print_console("This bundle is over!")
