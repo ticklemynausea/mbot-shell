@@ -27,13 +27,14 @@ soup = bs4.BeautifulSoup(requests.get("https://humblebundle.com").text)
 res = soup.find_all('span', 'game-box')
 
 if res:
+  bTitle = soup.find('img', class_="promo-logo")['alt']
   for i in res:
     game = i.find('img')['alt']
 
     if game not in not_games and "Soundtrack" not in game:
       games.append(game)
 
-  print_console(", ".join(games))
+  print_console("07%s: %s" % (bTitle, ", ".join(games)))
 
 else:
   print_console("This bundle is over!")
