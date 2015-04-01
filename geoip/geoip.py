@@ -116,7 +116,7 @@ else:
     sys.exit(-1)
 
 
-url = "http://www.maxmind.com/geoip/v2.0/omni/%s?demo=1"
+url = "https://www.maxmind.com/geoip/v2.1/city/%s?use-downloadable-db=1&demo=1"
 headers = {
   'Pragma':'no-cache', 
   'Accept-Encoding':'gzip,deflate,sdch',
@@ -169,15 +169,10 @@ try:
 
 
   if "city" in js.keys():
-    s += "City: %s (%s%%); " % (js["city"]["names"]["en"], js["city"]["confidence"])
+    s += "City: %s; " % (js["city"]["names"]["en"])
 
   if "country" in js.keys():
-    s += "Country: %s (%s%%); " % (js["country"]["names"]["en"], js["country"]["confidence"])
-
-  if "location" in js.keys():
-    s += u"%skm from %s\u00b0N %s\u00b0E; " % \
-      (js["location"]["accuracy_radius"], js["location"]["latitude"],
-          js["location"]["longitude"])
+    s += "Country: %s; " % (js["country"]["names"]["en"])
 
     if "time_zone" in js["location"]:
       s += "Time Zone: %s; " % js["location"]["time_zone"]
