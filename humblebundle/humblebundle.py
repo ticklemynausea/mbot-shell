@@ -23,10 +23,13 @@ not_games = ["Electronic Frontier Foundation",
              "Girls Who Code",
              "The V Foundation",
              "buildOn",
-             "More games coming soon!"]
+             "The IndieCade Foundation",
+             "Extra Life / Children's Miracle Network Hospitals",
+             "More games coming soon!",
+             "More content coming soon!"]
 games = []
 
-soup = bs4.BeautifulSoup(requests.get("https://humblebundle.com").text)
+soup = bs4.BeautifulSoup(requests.get("https://humblebundle.com").text, "html.parser")
 res = soup.find_all('span', 'game-box')
 
 if res:
