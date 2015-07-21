@@ -13,13 +13,34 @@ not_games = ["Electronic Frontier Foundation",
              "Mozilla Foundation",
              "CodeNow",
              "Maker Education Initiative",
-             "More games coming soon!"]
+             "Save the Children",
+             "charity: water",
+             "Exclusive Dreamcast T-Shirt",
+             "AbleGamers",
+             "Willow",
+             "SpecialEffect",
+             "GamesAid",
+             "Girls Who Code",
+             "The V Foundation",
+             "buildOn",
+             "The IndieCade Foundation",
+             "Extra Life / Children's Miracle Network Hospitals",
+             "More games coming soon!",
+             "More content coming soon!"]
 games = []
 
-soup = bs4.BeautifulSoup(requests.get("https://humblebundle.com").text)
-for i in soup.find_all('span', 'game-box'):
-  game = i.find('img')['alt']
-  if game not in not_games and "Soundtrack" not in game:
-    games.append(game)
+soup = bs4.BeautifulSoup(requests.get("https://humblebundle.com").text, "html.parser")
+res = soup.find_all('span', 'game-box')
 
-print_console(", ".join(games))
+if res:
+  bTitle = soup.find('img', class_="promo-logo")['alt']
+  for i in res:
+    game = i.find('img')['alt']
+
+    if game not in not_games and "Soundtrack" not in game:
+      games.append(game)
+
+  print_console("07%s: %s" % (bTitle, ", ".join(games)))
+
+else:
+  print_console("This bundle is over!")
