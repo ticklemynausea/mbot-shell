@@ -29,7 +29,7 @@ def getResults(n):
     if 'error' not in j:
 
       # User Info
-      data='Twitch {j["display_name"]}: Title: {j["status"]} - Game: {j["game"]}'
+      data='Twitch {0}: Title: {1} - Game: {2}'.format(j["display_name"],j["status"],j["game"])
 
       # Partner Info
       if j["partner"] != False: 
@@ -37,7 +37,7 @@ def getResults(n):
 
       # Steam Info
       if j["steam_id"] != False:
-        data+=' [Steam: http://steamcommunity.com/profiles/{j["steam_id"]}]'
+        data+=' [Steam: http://steamcommunity.com/profiles/{0}]'.format(j["steam_id"])
 
       # Status Info
       if j["liverail_id"] != False:
@@ -49,10 +49,10 @@ def getResults(n):
       print_console(data)
 
     else:
-      print_console('Twitch Returned: {j["error"]}')
+      print_console('Twitch Returned: {0}'.format(j["error"]))
 
   else:
-    print_console('Request Returned: "{r.status_code}" status code.')
+    print_console('Request Returned: "{0}" status code.'.format(r.status_code))
 
 
 # Main
