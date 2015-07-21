@@ -59,8 +59,8 @@ def getResults(n):
           sv=l["streams"][0]["viewers"]
           data+=' [\0032 Live w/ {0} viewers \003]'.format(sv)
 
-      else:
-        data+=' [\0031 Off \003]'
+        else:
+          data+=' [\0031 Off \003]'
 
       #(Color's: \0031 red \0032 green \0035 purle \0003 clear)
 
