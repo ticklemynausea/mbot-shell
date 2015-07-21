@@ -23,6 +23,7 @@ def getResults(n):
 
   # Request Data
   r=requests.get('https://api.twitch.tv/api/channels/{0}'.format(n))
+  l=requests.get('https://api.twitch.tv/kraken/streams?channel={0}'.format(n))
 
   # Check Status Code
   if r.status_code == 200:
@@ -43,8 +44,21 @@ def getResults(n):
         data+=' [ Steam: http://steamcommunity.com/profiles/{0} ]'.format(j["steam_id"])
 
       # Status Info
-      if j["liverail_id"] != None:
-        data+=' [\0032 Live \003]'
+      if l.status_code == 200:
+        l=l.json()
+
+        # If "Online"
+        if l["_total"] != 0:
+
+          # User Totals
+          sf=l["streams"][0]["channel"]["followers"]
+          st=l["streams"][0]["channel"]["views"]
+          data+=' [ Totals: {0} Followers | {1} Viewers ]'.format(sf,st)
+
+          # Viewers
+          sv=l["streams"][0]["viewers"]
+          data+=' [\0032 Live w/ {0} viewers \003]'.format(sv)
+
       else:
         data+=' [\0031 Off \003]'
 
