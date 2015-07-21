@@ -7,7 +7,6 @@ import requests
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
-
 #def print_console(x):
 #  print(x)
 
@@ -30,32 +29,33 @@ def getResults(n):
     if 'error' not in j:
 
       # User Info
-      data='Twitch {0}: Title: {1} - Game: {2}'.format(j['display_name'],j['status'],j['game'])
+      data='Twitch {j["display_name"]}: Title: {j["status"]} - Game: {j["game"]}'
 
       # Partner Info
-      if j['partner'] != False: 
-        data=' {0} [\0035 Partner \003]'.format(data)
+      if j["partner"] != False: 
+        data+=' [\0035 Partner \003]'
 
       # Steam Info
-      if j['steam_id'] != False:
-        data=' {0} [Steam: http://steamcommunity.com/profiles/{1}]'.format(data,j['steam_id'])
+      if j["steam_id"] != False:
+        data+=' [Steam: http://steamcommunity.com/profiles/{j["steam_id"]}]'
 
       # Status Info
-      if j['liverail_id'] != False:
-        live='[\0032 Live \003]'
+      if j["liverail_id"] != False:
+        data+=' [\0032 Live \003]'
       else:
-        live='[\0031 Off \003]'
-      data='{0} {1}'.format(data,live)
+        data+=' [\0031 Off \003]'
 
       # Output
       print_console(data)
 
     else:
-      print_console('Twitch Returned: {1}'.format(n,j['error']))
+      print_console('Twitch Returned: {j["error"]}')
 
   else:
-    print_console('Request Returned: "{0}" status code.'.format(r.status_code))
+    print_console('Request Returned: "{r.status_code}" status code.')
 
+
+# Main
 if len(sys.argv) < 2:
   man()
 
