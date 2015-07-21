@@ -15,6 +15,9 @@ def man():
   print_console('Usage: !twitch <name>')
   exit(-1)
 
+# Clean non-ascii
+def c(t):
+  return t.encode('ascii', 'ignore')
 
 def getResults(n):
 
@@ -29,15 +32,15 @@ def getResults(n):
     if 'error' not in j:
 
       # User Info
-      data='Twitch {0}: Title: {1} - Game: {2}'.format(j["display_name"],j["status"],j["game"])
+      data='Twitch {0}\'s - Title: "{1}" - Game: "{2}"'.format(j["display_name"],c(j["status"]),j["game"])
 
-      # Partner Info
+      # Partner Info 
       if j["partner"] != False: 
         data+=' [\0035 Partner \003]'
 
       # Steam Info
-      if j["steam_id"] != False:
-        data+=' [Steam: http://steamcommunity.com/profiles/{0}]'.format(j["steam_id"])
+      if j["steam_id"] != None:
+        data+=' [ Steam: http://steamcommunity.com/profiles/{0} ]'.format(j["steam_id"])
 
       # Status Info
       if j["liverail_id"] != False:
@@ -45,11 +48,13 @@ def getResults(n):
       else:
         data+=' [\0031 Off \003]'
 
+      #(Color's: \0031 red \0032 green \0035 purle \0003 clear)
+
       # Output
       print_console(data)
 
     else:
-      print_console('Twitch Returned: {0}'.format(j["error"]))
+      print_console('Twitch Returned: {0}'.format(c(j["error"])))
 
   else:
     print_console('Request Returned: "{0}" status code.'.format(r.status_code))
