@@ -30,14 +30,14 @@ def getResults(n):
 
     # Check Account
     j=r.json()
-    if 'error' not in j:
+    if 'message' not in j:
 
       # User Info
-      data='Twitch {0}\'s - Title: "{1}" - Game: "{2}"'.format(j["display_name"],c(j["status"]),j["game"])
+      data='Twitch {0}\'s - Title: \002"{1}"\002 - Game: \002"{2}"\002'.format(j["display_name"],c(j["status"]),j["game"])
 
       # Partner Info 
       if j["partner"] != False: 
-        data+=' [\0035 Partner \003]'
+        data+=' [\0036 Partner \003]'
 
       # Steam Info
       if j["steam_id"] != None:
@@ -57,18 +57,24 @@ def getResults(n):
 
           # Viewers
           sv=l["streams"][0]["viewers"]
-          data+=' [\0032 Live w/ {0} viewers \003]'.format(sv)
+          data+=' [\0039 \002Live\002 w/ {0} viewers \003]'.format(sv)
 
         else:
-          data+=' [\0031 Off \003]'
+          ' [\0034 \002Off\002 \003]'
 
-      #(Color's: \0031 red \0032 green \0035 purle \0003 clear)
+      #Note: 
+      # - Bold: \002 
+      # - Color's: \0034 red \0039 green \0036 purle \0003 clear)
 
       # Output
       print_console('{0} - http://www.twitch.tv/{1}'.format(data,n))
 
     else:
-      print_console('Twitch Returned: {0}'.format(c(j["error"])))
+      print_console('Twitch Returned: {0}'.format(c(j["message"])))
+ 
+  elif r.status_code == 400 or r.status_code == 404:
+    j=r.json()
+    print_console('Twitch Returned: {0}'.format(c(j["message"])))
 
   else:
     print_console('Request Returned: "{0}" status code.'.format(r.status_code))
