@@ -43,7 +43,7 @@ def getResults(n):
         data+=' [ Steam: http://steamcommunity.com/profiles/{0} ]'.format(j["steam_id"])
 
       # Status Info
-      if j["liverail_id"] != False:
+      if j["liverail_id"] != None:
         data+=' [\0032 Live \003]'
       else:
         data+=' [\0031 Off \003]'
