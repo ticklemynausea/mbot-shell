@@ -51,7 +51,7 @@ def getResults(n):
       #(Color's: \0031 red \0032 green \0035 purle \0003 clear)
 
       # Output
-      print_console(data)
+      print_console('{0} - http://www.twitch.tv/{1}'.format(data,n))
 
     else:
       print_console('Twitch Returned: {0}'.format(c(j["error"])))
