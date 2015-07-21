@@ -60,7 +60,7 @@ def getResults(n):
           data+=' [\0039 \002Live\002 w/ {0} viewers \003]'.format(sv)
 
         else:
-          ' [\0034 \002Off\002 \003]'
+          data+=' [\0034 \002Off\002 \003]'
 
       #Note: 
       # - Bold: \002 
