@@ -103,11 +103,11 @@ if res:
     s = res[index]
     if total > 1 and index + 1 < total:
       if terms:
-        print_console("%s %d threads found! '.4 %s %s %d' for the next one" \
-            % (logo, total, board, terms, index + 2))
+        print_console("%s %d threads found! '.4 %s %s %d' for the next one"
+                      % (logo, total, board, terms, index + 2))
       else:
-        print_console("%s %d threads found! '.4 %s %d' for the next one" \
-            % (logo, total, board, index + 2))
+        print_console("%s %d threads found! '.4 %s %d' for the next one"
+                      % (logo, total, board, index + 2))
     print_console("%s %s" % (logo, s))
   except(IndexError):
     if terms:

@@ -20,13 +20,13 @@ def getResults(c):
 
   # Pick source
   if c is 'e':
-    soup = bs4.BeautifulSoup(requests.get('https://www.jogossantacasa.pt/web/SCCartazResult/euroMilhoes').text)
+    soup = bs4.BeautifulSoup(requests.get('https://www.jogossantacasa.pt/web/SCCartazResult/euroMilhoes').text, "html.parser")
     game = u"Euromilhões"
   if c is 't':
-    soup = bs4.BeautifulSoup(requests.get('https://www.jogossantacasa.pt/web/SCCartazResult/totolotoNew').text)
+    soup = bs4.BeautifulSoup(requests.get('https://www.jogossantacasa.pt/web/SCCartazResult/totolotoNew').text, "html.parser")
     game = u"Totoloto"
   if c is 'j':
-    soup = bs4.BeautifulSoup(requests.get('https://www.jogossantacasa.pt/web/SCCartazResult/joker').text)
+    soup = bs4.BeautifulSoup(requests.get('https://www.jogossantacasa.pt/web/SCCartazResult/joker').text, "html.parser")
     game = u"Joker"
 
   # Contest date
