@@ -1,3 +1,4 @@
 *.pyc
+*.swp
 rss/rss-data/
 lastfm/apikeys.py
