@@ -1,6 +1,7 @@
 [submodule "mariana"]
-	path = mariana
-	url = git://github.com/falsovsky/mariana.git
+  path = mariana
+  url = git://github.com/falsovsky/mariana.git
+
 [submodule "fml"]
-	path = fml
-	url = git@github.com:falsovsky/fml.git
+  path = fml
+  url = git@github.com:falsovsky/fml.git
