@@ -89,7 +89,7 @@ def is_valid_ipv6(ip):
   return pattern.match(ip) is not None
 
 def convert_hex_dec(arg):
-  m = re.search('^[0-9A-Fa-f]{8}+$', arg)
+  m = re.search('^[0-9A-Fa-f]{8}$', arg)
   if m:
     h = re.findall(r'.{1,2}',arg,re.DOTALL)
     i = []
