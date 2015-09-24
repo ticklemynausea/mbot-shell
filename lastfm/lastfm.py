@@ -270,15 +270,14 @@ class LastFM:
     tags = track.get_top_tags()
     if not tags:
       tags = track.artist.get_top_tags()
-    track = track.get_add_info(user.__str__())
 
-    if track.userloved == "1":
+    if track.get_userloved():
       loved = " 13<3"
     else:
       loved = ""
 
     try:
-      playcount = int(track.userplaycount)
+      playcount = int(track.get_userplaycount())
     except (ValueError, TypeError):
       playcount = 1
 
@@ -387,9 +386,6 @@ elif query == "artistinfo":
 elif query == "artistevents":
   LastFM().get_artist_events(artist)
 elif query == "nowplaying":
-  #if user.lower() == "ticksound":
-  #  print_console(LEL + " tickSound is now playing: Justin Bieber - Baby (600 plays, baby, better than radiohead, bieber, black metal, brutal death metal, emo, fag)");
-  #else:
   LastFM().get_now_playing(user)
 elif query == "setuser":
   LastFM().set_user(nick, user)
