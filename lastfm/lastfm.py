@@ -13,7 +13,7 @@ from apikeys import api_key, api_secret
 
 LEL = "0,5last.fm"
 NUM_EVENTS = 5
-USERFILE = '/home/irc/mbot/lastfm-data/lastfm.users'
+USERFILE = '/home/mbot/mbot/lastfm-data/lastfm.users'
 CHART_LENGTH = 10
 PRETTY_BAR = ["[4====            ]",
               "[4====7====        ]",
