@@ -15,7 +15,7 @@ my $weather = Weather::Underground->new(
   debug => 0,
 ) || print "Error: $@\n";
 
-my $arrayref = $weather->get_weather() || die "Error: $@\n";
+my $arrayref = $weather->get_weather() || print "Error: $@\n";
 
 foreach (@$arrayref) {
   my $response = "Weather in $_->{'place'}: ";
