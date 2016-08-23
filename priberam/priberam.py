@@ -74,7 +74,7 @@ def procura(pesquisa, indice = 1):
     resultado = ''.join(resultado)
     resultado = ' '.join([w.strip() for w in resultado.split('\n')])
 
-    mylib.print_console('%s sugestes:%s.' % (pesquisa, resultado))
+    mylib.print_console('Sugestões para %s:%s.' % (pesquisa, resultado))
     return
 
   if indice > contagem :
