@@ -164,7 +164,6 @@ class LastFM:
   def compare_users(self, user, user2):
     try:
       comparison = self.api.get_user(user).compare_with_user(user2)
-      print type(comparison)
 
     except pylast.WSError as e:
       print_console(LEL + " WSError %s: %s" % (e.status, e.details))
