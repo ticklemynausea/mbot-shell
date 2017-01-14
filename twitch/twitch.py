@@ -7,6 +7,8 @@ import requests
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
+from apikeys import client_id
+
 #def print_console(x):
 #  print(x)
 
@@ -21,9 +23,15 @@ def c(t):
 
 def getResults(n):
 
+  # Headers
+  headers = {
+    'Accept': 'application/vnd.twitchtv.v3+json',
+    'Client-ID': client_id
+  }
+
   # Request Data
-  r=requests.get('https://api.twitch.tv/api/channels/{0}'.format(n))
-  l=requests.get('https://api.twitch.tv/kraken/streams?channel={0}'.format(n))
+  r=requests.get('https://api.twitch.tv/api/channels/{0}'.format(n), headers=headers)
+  l=requests.get('https://api.twitch.tv/kraken/streams?channel={0}'.format(n), headers=headers)
 
   # Check Status Code
   if r.status_code == 200:
@@ -35,8 +43,8 @@ def getResults(n):
       # User Info
       data='Twitch {0}\'s - Title: \002"{1}"\002 - Game: \002"{2}"\002'.format(j["display_name"],c(j["status"]),j["game"])
 
-      # Partner Info 
-      if j["partner"] != False: 
+      # Partner Info
+      if j["partner"] != False:
         data+=' [\0036 Partner \003]'
 
       # Steam Info
@@ -62,8 +70,8 @@ def getResults(n):
         else:
           data+=' [\0034 \002Off\002 \003]'
 
-      #Note: 
-      # - Bold: \002 
+      #Note:
+      # - Bold: \002
       # - Color's: \0034 red \0039 green \0036 purle \0003 clear)
 
       # Output
@@ -71,7 +79,7 @@ def getResults(n):
 
     else:
       print_console('Twitch Returned: {0}'.format(c(j["message"])))
- 
+
   elif r.status_code == 400 or r.status_code == 404:
     j=r.json()
     print_console('Twitch Returned: {0}'.format(c(j["message"])))
