@@ -21,7 +21,7 @@ if len(sys.argv) < 2:
   print_console("%s search syntax: !google <terms>" % logo);
   exit(-1)
 
-query = u" ".join(unicode(sys.argv[1:]))
+query = unicode(u" ".join(sys.argv[1:]))
 
 string = u"%s %s: " % (logo, query)
 query = urllib.urlencode ({ u'q' : query })
