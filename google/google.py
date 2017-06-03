@@ -5,33 +5,38 @@ import os
 import code
 import json as m_json
 
+from apikeys import CSE_API_KEY, ENGINE_ID
+
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console, unescape, strip
 
+# https://developers.google.com/custom-search/json-api/v1/overview
+# Free API limited to 100 searches per day (lol)
 
-logo = "2G4o8o2g3l4e"
+
+logo = u"2G4o8o2g3l4e"
 
 if len(sys.argv) < 2:
   print_console("%s search syntax: !google <terms>" % logo);
   exit(-1)
 
-query = " ".join(sys.argv[1:])
+query = unicode(u" ".join(sys.argv[1:]))
 
-string = "%s %s: " % (logo, query)
-query = urllib.urlencode ({ 'q' : query })
-response = urllib.urlopen('http://ajax.googleapis.com/ajax/services/search/web?v=1.0&' + query).read()
+string = u"%s %s: " % (logo, query)
+query = urllib.urlencode ({ u'q' : query })
+baseURL = u"https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&alt=json&" % (CSE_API_KEY, ENGINE_ID)
+response = urllib.urlopen(baseURL + query).read()
 json = m_json.loads(response)
-results = json['responseData']['results']
+results = json.get('items', None)
 
-i = 0
-for result in results[:3]:
- i += 1
- title = strip(unescape(result['title'].replace("<b>","").replace("</b>", ""))).encode("utf-8")
- url = urllib.unquote(result['url']).encode("utf-8")   # was URL in the original and that threw a name error exception
- string = string + "%s (%s); " % (title, url)
+if results:
+  for result in results[:3]:
+    title = unicode(result['title'])
+    url = unicode(result['link'])
+    string = unicode(string) + u"%s ( %s ); " % (title, url)
 
-if i > 0:
-  print_console("%s: %s" % (string, url))
+  print_console(u"%s: %s" % (string, url))
+
 else:
   print_console("No results!")
