@@ -1,11 +1,11 @@
 #!/bin/bash
 
 btce_price_eur() {
-  python -c 'import json; import sys; print json.load(sys.stdin)["btc"]["eur"]["btce"]["last"]'
+  python -c 'import json; import sys; print json.load(sys.stdin)["btc"]["eur"]["kraken"]["last"]'
 }
 
 btce_price_usd() {
-  python -c 'import json; import sys; print json.load(sys.stdin)["btc"]["usd"]["btce"]["last"]'
+  python -c 'import json; import sys; print json.load(sys.stdin)["btc"]["usd"]["bitfinex"]["last"]'
 }
 
 AMOUNT=${1:-1.0}
