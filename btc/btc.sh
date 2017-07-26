@@ -10,8 +10,8 @@ btce_price_usd() {
 
 AMOUNT=${1:-1.0}
 
-USD=$(curl -sf http://preev.com/pulse/units:btc+usd/sources:btce | btce_price_usd)
-EUR=$(curl -sf http://preev.com/pulse/units:btc+eur/sources:btce | btce_price_eur)
+USD=$(curl -sf http://preev.com/pulse/units:btc+usd/sources:bitfinex | btce_price_usd)
+EUR=$(curl -sf http://preev.com/pulse/units:btc+eur/sources:kraken | btce_price_eur)
 
 USD=$(echo "$USD" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
 EUR=$(echo "$EUR" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
