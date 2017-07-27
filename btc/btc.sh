@@ -1,19 +1,19 @@
 #!/bin/bash
 
-btce_price_eur() {
-  python -c 'import json; import sys; print json.load(sys.stdin)["btc"]["eur"]["kraken"]["last"]'
+eth_price_eur() {
+  python -c 'import json; import sys; print json.load(sys.stdin)["RAW"]["ETH"]["EUR"]["PRICE"]'
 }
 
-btce_price_usd() {
-  python -c 'import json; import sys; print json.load(sys.stdin)["btc"]["usd"]["bitfinex"]["last"]'
+btc_price_eur() {
+  python -c 'import json; import sys; print json.load(sys.stdin)["RAW"]["BTC"]["EUR"]["PRICE"]'
 }
 
 AMOUNT=${1:-1.0}
 
-USD=$(curl -sf http://preev.com/pulse/units:btc+usd/sources:bitfinex | btce_price_usd)
-EUR=$(curl -sf http://preev.com/pulse/units:btc+eur/sources:kraken | btce_price_eur)
+ETH=$(curl -sf "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH&tsyms=EUR" | eth_price_eur)
+BTC=$(curl -sf "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC&tsyms=EUR" | btc_price_eur)
 
-USD=$(echo "$USD" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
-EUR=$(echo "$EUR" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
+ETH=$(echo "$ETH" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
+BTC=$(echo "$BTC" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
 
-echo "$AMOUNT btc = $USD usd = $EUR eur"
+echo "$AMOUNT ETH = $ETH eur \\ $AMOUNT BTC = $BTC eur"
