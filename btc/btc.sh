@@ -25,4 +25,4 @@ USD=$(curl -sf "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=$COI
 EUR=$(echo "$EUR" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
 USD=$(echo "$USD" "$AMOUNT" | awk '{ printf "%.2f\n", $1 * $2}')
 
-echo "$AMOUNT $COIN = $USD usd \\ $EUR eur"
+echo "$AMOUNT $COIN = $USD usd   $AMOUNT $COIN = $EUR eur"
