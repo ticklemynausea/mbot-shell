@@ -19,10 +19,12 @@ url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.f
 
 response = urllib2.urlopen(url)
 values = json.loads(response.read())
-channel = values['query']['results']['channel']
-conditions = channel['item']['condition']
-atemosphere = channel['atmosphere']
-astronomy = channel['astronomy']
-wind = channel['wind']
-
-print("%s Temperature: %s Cº  Condition: %s  Humidity: %s%%  Wind: %s km/h  Sunrise/Sunset: %s/%s" % (channel['item']['title'], conditions['temp'], conditions['text'], atemosphere['humidity'], wind['speed'], astronomy['sunrise'], astronomy['sunset'] ) )
+if values['query']['results'] is None:
+	print("No results found")
+else:
+	channel = values['query']['results']['channel']
+	conditions = channel['item']['condition']
+	atemosphere = channel['atmosphere']
+	astronomy = channel['astronomy']
+	wind = channel['wind']
+	print("%s Temperature: %s Cยบ  Condition: %s  Humidity: %s%%  Wind: %s km/h  Sunrise/Sunset: %s/%s" % (channel['item']['title'], conditions['temp'], conditions['text'], atemosphere['humidity'], wind['speed'], astronomy['sunrise'], astronomy['sunset'] ) )
