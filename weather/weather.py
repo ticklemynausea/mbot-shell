@@ -13,7 +13,7 @@ from mylib import print_console
 city = ""
 forecastnum = 0
 if (len(sys.argv) == 1):
-	print_console("Usage .w <location> [--forecast [1-9]]")
+	print_console(u"Usage .w <location> [--forecast [1-9]]")
 	sys.exit(0)
 for x in range(1, len(sys.argv)):
 	if x == 1:
@@ -36,18 +36,18 @@ url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.f
 try:
 	response = urllib2.urlopen(url, timeout=5)
 except urllib2.URLError, e:
-		print_console("There was an error: %r" % e)
+		print_console(u"There was an error: %r" % e)
 		sys.exit(0)
 values = json.loads(response.read())
 if values['query']['results'] is None:
-	print_console("No results found")
+	print_console(u"No results found")
 else:
 	channel = values['query']['results']['channel']
 	conditions = channel['item']['condition']
 	atemosphere = channel['atmosphere']
 	astronomy = channel['astronomy']
 	wind = channel['wind']
-	print_console("%s Temperature: %s Cº  Condition: %s  Humidity: %s%%  Wind: %s km/h  Sunrise/Sunset: %s/%s" % (channel['item']['title'], conditions['temp'], conditions['text'], atemosphere['humidity'], wind['speed'], astronomy['sunrise'], astronomy['sunset'] ) )
+	print_console(u"%s Temperature: %s Cº  Condition: %s  Humidity: %s%%  Wind: %s km/h  Sunrise/Sunset: %s/%s" % (channel['item']['title'], conditions['temp'], conditions['text'], atemosphere['humidity'], wind['speed'], astronomy['sunrise'], astronomy['sunset'] ) )
 	if forecastnum > 0:
 		if forecastnum > 9:
 			forecastnum = 9
