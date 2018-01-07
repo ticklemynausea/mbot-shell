@@ -37,6 +37,6 @@ try:
 except:
 	print_console("No results found")
 	sys.exit(0)
-eur = values['RAW'][coin]['EUR']['PRICE']
-usd = values['RAW'][coin]['USD']['PRICE']
+eur = float(values['RAW'][coin]['EUR']['PRICE'])
+usd = float(values['RAW'][coin]['USD']['PRICE'])
 print_console("%0.2f %s = %0.2f USD = %0.2f EUR" % (ammount, coin, usd * ammount, eur * ammount))
