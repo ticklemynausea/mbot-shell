@@ -19,8 +19,6 @@ def degredo():
 def adcautelam(key, page):
     request = requests.get('https://inquisicao.deadbsd.org/api/adcautelam?key=' + key + '&page=' + str(page), timeout=TIMEOUT)
 
-    print(request.status_code)
-
     if request.status_code == 404:
         print_console("Not found")
     else:
