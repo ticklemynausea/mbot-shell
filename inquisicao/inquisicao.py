@@ -14,7 +14,7 @@ TIMEOUT = 5
 def degredo():
     request = requests.get('https://inquisicao.deadbsd.org/api/degredo', timeout=TIMEOUT)
     j = request.json()
-    print_console("[%s] %s | Crime: %s | %s" % (j['processo'], j['titulo'], j['crime'], j['sentenca']))
+    print_console("%s | Crime: %s | %s | %s" % (j['titulo'], j['crime'], j['sentenca'], j['url']))
 
 def adcautelam(key, page):
     request = requests.get('https://inquisicao.deadbsd.org/api/adcautelam?key=' + key + '&page=' + str(page), timeout=TIMEOUT)
@@ -23,12 +23,12 @@ def adcautelam(key, page):
         print_console("Not found")
     else:
         j = request.json()
-        print_console("[%d/%d] %s | %s: %s | #%s" %
+        print_console("[%d/%d] %s | %s: %s | %s" %
                     (j['next'] - 1 if j['next'] else j['total'],
                      j['total'], j['message']['titulo'],
                      j['message']['match']['key'],
                      j['message']['match']['value'],
-                     j['message']['processo']))
+                     j['message']['url']))
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
