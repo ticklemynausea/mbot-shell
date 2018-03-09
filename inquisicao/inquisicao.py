@@ -14,7 +14,15 @@ TIMEOUT = 5
 def degredo():
     request = requests.get('https://inquisicao.deadbsd.org/api/degredo', timeout=TIMEOUT)
     j = request.json()
-    print_console("%s | Crime: %s | %s | %s" % (j['titulo'], j['crime'], j['sentenca'], j['url']))
+
+    result = j['titulo']
+    if j['crime']:
+        result = "%s | Crime %s" % (result, j['crime'])
+    if j['sentenca']:
+        result = "%s | %s" % (result, j['sentenca'])
+    result = "%s | %s" % (result, j['url'])
+
+    print_console(result)
 
 def adcautelam(key, page):
     request = requests.get('https://inquisicao.deadbsd.org/api/adcautelam?key=' + key + '&page=' + str(page), timeout=TIMEOUT)
@@ -23,12 +31,28 @@ def adcautelam(key, page):
         print_console("Not found")
     else:
         j = request.json()
-        print_console("[%d/%d] %s | %s: %s | %s" %
-                    (j['next'] - 1 if j['next'] else j['total'],
-                     j['total'], j['message']['titulo'],
-                     j['message']['match']['key'],
-                     j['message']['match']['value'],
-                     j['message']['url']))
+
+        result = "[%d/%d] %s" % (
+            j['next'] - 1 if j['next'] else j['total'],
+            j['total'],
+            j['message']['titulo'])
+        if j['message']['crime']:
+            result = "%s | Crime %s" % (result, j['message']['crime'])
+        if j['message']['sentenca']:
+            result = "%s | %s" % (result, j['message']['sentenca'])
+
+        if j['message']['crime'] != j['message']['match']['value'] and j['message']['sentenca'] != j['message']['match']['value']:
+            result = "%s | %s: %s | %s" % (
+                result,
+                j['message']['match']['key'],
+                j['message']['match']['value'],
+                j['message']['url'])
+        else:
+            result = "%s | %s" % (
+                result,
+                j['message']['url'])
+
+        print_console(result)
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
