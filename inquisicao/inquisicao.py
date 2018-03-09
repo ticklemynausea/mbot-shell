@@ -40,11 +40,17 @@ def adcautelam(key, page):
             result = "%s | Crime %s" % (result, j['message']['crime'])
         if j['message']['sentenca']:
             result = "%s | %s" % (result, j['message']['sentenca'])
-        result = "%s | %s: %s | %s" % (
-            result,
-            j['message']['match']['key'],
-            j['message']['match']['value'],
-            j['message']['url'])
+
+        if j['message']['crime'] != j['message']['match']['value'] and j['message']['sentenca'] != j['message']['match']['value']:
+            result = "%s | %s: %s | %s" % (
+                result,
+                j['message']['match']['key'],
+                j['message']['match']['value'],
+                j['message']['url'])
+        else:
+            result = "%s | %s" % (
+                result,
+                j['message']['url'])
 
         print_console(result)
 
