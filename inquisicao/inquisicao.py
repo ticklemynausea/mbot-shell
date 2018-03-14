@@ -14,7 +14,8 @@ TIMEOUT = 5
 def autoDeFe(processo, adcautelam=False):
 
     result = ""
-    moar = True
+    extra = "crime"
+    shown = 0
 
     # Se for pesquisa, mostra o registo actual / total
     if adcautelam:
@@ -29,37 +30,38 @@ def autoDeFe(processo, adcautelam=False):
     # Quase todos têm crime
     if processo['crime']:
         result = "%s | Crime: %s" % (result, processo['crime'])
+        shown = shown + 1
     # Se tiver sentença, nao printa mais dados sobre o processo (moar)
     if processo['sentenca']:
         result = u"%s | Sentença: %s" % (result, processo['sentenca'])
-        moar = False
+        shown = shown + 1
 
-    if moar:
+    if shown < 2:
         # Se tiver notas e outros dados
         if processo['notas'] and processo['outros']:
             # Ver qual deles é maior e printar
             if len(processo['notas']) > len(processo['outros']):
                 result = "%s | Notas: %s" % (result, processo['notas'])
+                extra = "notas"
             else:
                 result = "%s | Outros dados: %s" % (result, processo['outros'])
+                extra = "outros"
         # Senão printa as Notas
         elif processo['notas']:
             result = "%s | Notas: %s" % (result, processo['notas'])
+            extra = "notas"
         # Ou os Outros dados
         elif processo['outros']:
             result = "%s | Outros dados: %s" % (result, processo['outros'])
+            extra = "outros"
 
     # Se for pesquisa
     if adcautelam:
         # Verifica se o match é o mesmo de algum dos items printados
-        # TODO: existe um possivel bug aqui:
-        # * se as "Notas" forem printadas anteriormente
-        # * e o match for no campo "Outros dados"
-        # Não vai printar o match
+        # Tou a comparar duas vezes com o crime quando o "extra" não é definido
         if (processo['crime'] != processo['match']['value'] and
                 processo['sentenca'] != processo['match']['value'] and
-                processo['notas'] != processo['match']['value'] and
-                processo['outros'] != processo['match']['value']):
+                processo[extra] != processo['match']['value']):
 
             # Printa o match
             result = "%s | %s: %s" % (
