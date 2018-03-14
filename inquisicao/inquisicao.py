@@ -27,17 +27,19 @@ def autoDeFe(processo, adcautelam=False):
     # Titulo
     result = "%s%s" % (result, processo['titulo'])
 
-    # Quase todos têm crime
+    # Printa o Crime se existir, e incrementa o shown
     if processo['crime']:
         result = "%s | Crime: %s" % (result, processo['crime'])
         shown = shown + 1
-    # Se tiver sentença, nao printa mais dados sobre o processo (moar)
+    # Printa a Senteça se existir, e incrementa o shown
     if processo['sentenca']:
         result = u"%s | Sentença: %s" % (result, processo['sentenca'])
         shown = shown + 1
 
+    # Se printou menos de 2 registos
     if shown < 2:
-        # Se tiver notas e outros dados
+        # Se tiver "Notas" e "Outros dados"
+        # Define a variavel extra com o valor da chave que foi extra-printada
         if processo['notas'] and processo['outros']:
             # Ver qual deles é maior e printar
             if len(processo['notas']) > len(processo['outros']):
