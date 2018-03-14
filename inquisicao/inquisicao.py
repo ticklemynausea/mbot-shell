@@ -72,9 +72,6 @@ def autoDeFe(processo, adcautelam=False):
 
     return result
 
-
-
-
 def degredo():
     request = requests.get('https://inquisicao.deadbsd.org/api/degredo', timeout=TIMEOUT)
 
