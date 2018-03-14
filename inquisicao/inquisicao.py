@@ -11,17 +11,75 @@ from mylib import print_console
 
 TIMEOUT = 5
 
+def autoDeFe(processo, adcautelam=False):
+
+    result = ""
+    moar = True
+
+    # Se for pesquisa, mostra o registo actual / total
+    if adcautelam:
+        result = "[%d/%d] " % (
+            processo['next'] - 1 if processo['next'] else processo['total'],
+            processo['total'])
+        processo = processo['message']
+
+    # Titulo
+    result = "%s%s" % (result, processo['titulo'])
+
+    # Quase todos têm crime
+    if processo['crime']:
+        result = "%s | Crime: %s" % (result, processo['crime'])
+    # Se tiver sentença, nao printa mais dados sobre o processo (moar)
+    if processo['sentenca']:
+        result = u"%s | Sentença: %s" % (result, processo['sentenca'])
+        moar = False
+
+    if moar:
+        # Se tiver notas e outros dados
+        if processo['notas'] and processo['outros']:
+            # Ver qual deles é maior e printar
+            if len(processo['notas']) > len(processo['outros']):
+                result = "%s | Notas: %s" % (result, processo['notas'])
+            else:
+                result = "%s | Outros dados: %s" % (result, processo['outros'])
+        # Senão printa as Notas
+        elif processo['notas']:
+            result = "%s | Notas: %s" % (result, processo['notas'])
+        # Ou os Outros dados
+        elif processo['outros']:
+            result = "%s | Outros dados: %s" % (result, processo['outros'])
+
+    # Se for pesquisa
+    if adcautelam:
+        # Verifica se o match é o mesmo de algum dos items printados
+        # TODO: existe um possivel bug aqui:
+        # * se as "Notas" forem printadas anteriormente
+        # * e o match for no campo "Outros dados"
+        # Não vai printar o match
+        if (processo['crime'] != processo['match']['value'] and
+                processo['sentenca'] != processo['match']['value'] and
+                processo['notas'] != processo['match']['value'] and
+                processo['outros'] != processo['match']['value']):
+
+            # Printa o match
+            result = "%s | %s: %s" % (
+                result,
+                processo['match']['key'],
+                processo['match']['value'])
+
+    # Adiciona o short url
+    result = "%s | %s" % (result, processo['url'])
+
+    return result
+
+
+
+
 def degredo():
     request = requests.get('https://inquisicao.deadbsd.org/api/degredo', timeout=TIMEOUT)
+
     j = request.json()
-
-    result = j['titulo']
-    if j['crime']:
-        result = "%s | Crime %s" % (result, j['crime'])
-    if j['sentenca']:
-        result = "%s | %s" % (result, j['sentenca'])
-    result = "%s | %s" % (result, j['url'])
-
+    result = autoDeFe(j)
     print_console(result)
 
 def adcautelam(key, page):
@@ -31,27 +89,7 @@ def adcautelam(key, page):
         print_console("Not found")
     else:
         j = request.json()
-
-        result = "[%d/%d] %s" % (
-            j['next'] - 1 if j['next'] else j['total'],
-            j['total'],
-            j['message']['titulo'])
-        if j['message']['crime']:
-            result = "%s | Crime %s" % (result, j['message']['crime'])
-        if j['message']['sentenca']:
-            result = "%s | %s" % (result, j['message']['sentenca'])
-
-        if j['message']['crime'] != j['message']['match']['value'] and j['message']['sentenca'] != j['message']['match']['value']:
-            result = "%s | %s: %s | %s" % (
-                result,
-                j['message']['match']['key'],
-                j['message']['match']['value'],
-                j['message']['url'])
-        else:
-            result = "%s | %s" % (
-                result,
-                j['message']['url'])
-
+        result = autoDeFe(j, adcautelam=True)
         print_console(result)
 
 if __name__ == "__main__":
