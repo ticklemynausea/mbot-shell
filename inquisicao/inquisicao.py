@@ -1,57 +1,105 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests
-import json
+"""Consome a API da Inquisição para ser usado com o mbot-shell."""
+
 import re
 import sys
 import os
+import requests
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
 
 TIMEOUT = 5
 
+def auto_de_fe(processo, pesquisa=False):
+    """Devolve uma string bonita sobre o processo"""
+
+    result = ""
+    extra = "crime"
+    shown = 0
+
+    # Se for pesquisa, mostra o registo actual / total
+    if pesquisa:
+        result = "[%d/%d] " % (
+            processo['next'] - 1 if processo['next'] else processo['total'],
+            processo['total'])
+        processo = processo['message']
+
+    # Titulo
+    result = "%s%s" % (result, processo['titulo'])
+
+    # Printa o Crime se existir, e incrementa o shown
+    if processo['crime']:
+        result = "%s | Crime: %s" % (result, processo['crime'])
+        shown = shown + 1
+    # Printa a Sentença se existir, e incrementa o shown
+    if processo['sentenca']:
+        result = u"%s | Sentença: %s" % (result, processo['sentenca'])
+        shown = shown + 1
+
+    # Se printou menos de 2 registos
+    if shown < 2:
+        # Se tiver "Notas" e "Outros dados"
+        if processo['notas'] and processo['outros']:
+            # Ver qual deles é maior e printa.
+            # Define a variavel "extra" com o valor da chave que foi
+            # extra-printada, para ser utilizada em caso de pesquisa
+            if len(processo['notas']) > len(processo['outros']):
+                result = "%s | Notas: %s" % (result, processo['notas'])
+                extra = "notas"
+            else:
+                result = "%s | Outros dados: %s" % (result, processo['outros'])
+                extra = "outros"
+        # Senão printa as Notas
+        elif processo['notas']:
+            result = "%s | Notas: %s" % (result, processo['notas'])
+            extra = "notas"
+        # Ou os Outros dados
+        elif processo['outros']:
+            result = "%s | Outros dados: %s" % (result, processo['outros'])
+            extra = "outros"
+
+    # Se for pesquisa
+    if pesquisa:
+        # Verifica se o match é o mesmo que algum dos items já printados
+        # Estou a comparar duas vezes com o Crime quando o "extra" não é definido
+        if (processo['crime'] != processo['match']['value'] and
+                processo['sentenca'] != processo['match']['value'] and
+                processo[extra] != processo['match']['value']):
+
+            # Printa o match
+            result = "%s | %s: %s" % (
+                result,
+                processo['match']['key'],
+                processo['match']['value'])
+
+    # Adiciona o short url
+    result = "%s | %s" % (result, processo['url'])
+
+    return result
+
 def degredo():
+    """Processo aleatorio"""
+
     request = requests.get('https://inquisicao.deadbsd.org/api/degredo', timeout=TIMEOUT)
+
     j = request.json()
-
-    result = j['titulo']
-    if j['crime']:
-        result = "%s | Crime %s" % (result, j['crime'])
-    if j['sentenca']:
-        result = "%s | %s" % (result, j['sentenca'])
-    result = "%s | %s" % (result, j['url'])
-
+    result = auto_de_fe(j)
     print_console(result)
 
-def adcautelam(key, page):
-    request = requests.get('https://inquisicao.deadbsd.org/api/adcautelam?key=' + key + '&page=' + str(page), timeout=TIMEOUT)
+def ad_cautelam(key, page):
+    """Pesquisa em elementos de um Processo"""
+
+    request = requests.get(
+        'https://inquisicao.deadbsd.org/api/adcautelam?key=' + key +
+        '&page=' + str(page), timeout=TIMEOUT)
 
     if request.status_code == 404:
         print_console("Not found")
     else:
         j = request.json()
-
-        result = "[%d/%d] %s" % (
-            j['next'] - 1 if j['next'] else j['total'],
-            j['total'],
-            j['message']['titulo'])
-        if j['message']['crime']:
-            result = "%s | Crime %s" % (result, j['message']['crime'])
-        if j['message']['sentenca']:
-            result = "%s | %s" % (result, j['message']['sentenca'])
-
-        if j['message']['crime'] != j['message']['match']['value'] and j['message']['sentenca'] != j['message']['match']['value']:
-            result = "%s | %s: %s | %s" % (
-                result,
-                j['message']['match']['key'],
-                j['message']['match']['value'],
-                j['message']['url'])
-        else:
-            result = "%s | %s" % (
-                result,
-                j['message']['url'])
-
+        result = auto_de_fe(j, pesquisa=True)
         print_console(result)
 
 if __name__ == "__main__":
@@ -70,4 +118,4 @@ if __name__ == "__main__":
             PAGE = int(MATCH.group('page').strip())
 
         if KEY:
-            adcautelam(KEY, PAGE)
+            ad_cautelam(KEY, PAGE)
