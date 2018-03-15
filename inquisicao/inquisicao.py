@@ -13,7 +13,7 @@ from mylib import print_console
 TIMEOUT = 5
 
 def auto_de_fe(processo, pesquisa=False):
-    """Devolve uma string bonita sobre o processo """
+    """Devolve uma string bonita sobre o processo"""
 
     result = ""
     extra = "crime"
@@ -41,9 +41,10 @@ def auto_de_fe(processo, pesquisa=False):
     # Se printou menos de 2 registos
     if shown < 2:
         # Se tiver "Notas" e "Outros dados"
-        # Define a variavel extra com o valor da chave que foi extra-printada
         if processo['notas'] and processo['outros']:
-            # Ver qual deles é maior e printar
+            # Ver qual deles é maior e printa.
+            # Define a variavel "extra" com o valor da chave que foi
+            # extra-printada, para ser utilizada em caso de pesquisa
             if len(processo['notas']) > len(processo['outros']):
                 result = "%s | Notas: %s" % (result, processo['notas'])
                 extra = "notas"
@@ -61,8 +62,8 @@ def auto_de_fe(processo, pesquisa=False):
 
     # Se for pesquisa
     if pesquisa:
-        # Verifica se o match é o mesmo de algum dos items printados
-        # Tou a comparar duas vezes com o crime quando o "extra" não é definido
+        # Verifica se o match é o mesmo que algum dos items já printados
+        # Estou a comparar duas vezes com o Crime quando o "extra" não é definido
         if (processo['crime'] != processo['match']['value'] and
                 processo['sentenca'] != processo['match']['value'] and
                 processo[extra] != processo['match']['value']):
