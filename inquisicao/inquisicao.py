@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests
-import json
+"""Consome a API da Inquisição para ser usado com o mbot-shell."""
+
 import re
 import sys
 import os
+import requests
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
 
 TIMEOUT = 5
 
-def autoDeFe(processo, adcautelam=False):
+def auto_de_fe(processo, pesquisa=False):
+    """Devolve uma string bonita sobre o processo """
 
     result = ""
     extra = "crime"
     shown = 0
 
     # Se for pesquisa, mostra o registo actual / total
-    if adcautelam:
+    if pesquisa:
         result = "[%d/%d] " % (
             processo['next'] - 1 if processo['next'] else processo['total'],
             processo['total'])
@@ -31,7 +33,7 @@ def autoDeFe(processo, adcautelam=False):
     if processo['crime']:
         result = "%s | Crime: %s" % (result, processo['crime'])
         shown = shown + 1
-    # Printa a Senteça se existir, e incrementa o shown
+    # Printa a Sentença se existir, e incrementa o shown
     if processo['sentenca']:
         result = u"%s | Sentença: %s" % (result, processo['sentenca'])
         shown = shown + 1
@@ -58,7 +60,7 @@ def autoDeFe(processo, adcautelam=False):
             extra = "outros"
 
     # Se for pesquisa
-    if adcautelam:
+    if pesquisa:
         # Verifica se o match é o mesmo de algum dos items printados
         # Tou a comparar duas vezes com o crime quando o "extra" não é definido
         if (processo['crime'] != processo['match']['value'] and
@@ -77,20 +79,26 @@ def autoDeFe(processo, adcautelam=False):
     return result
 
 def degredo():
+    """Processo aleatorio"""
+
     request = requests.get('https://inquisicao.deadbsd.org/api/degredo', timeout=TIMEOUT)
 
     j = request.json()
-    result = autoDeFe(j)
+    result = auto_de_fe(j)
     print_console(result)
 
-def adcautelam(key, page):
-    request = requests.get('https://inquisicao.deadbsd.org/api/adcautelam?key=' + key + '&page=' + str(page), timeout=TIMEOUT)
+def ad_cautelam(key, page):
+    """Pesquisa em elementos de um Processo"""
+
+    request = requests.get(
+        'https://inquisicao.deadbsd.org/api/adcautelam?key=' + key +
+        '&page=' + str(page), timeout=TIMEOUT)
 
     if request.status_code == 404:
         print_console("Not found")
     else:
         j = request.json()
-        result = autoDeFe(j, adcautelam=True)
+        result = auto_de_fe(j, pesquisa=True)
         print_console(result)
 
 if __name__ == "__main__":
@@ -109,4 +117,4 @@ if __name__ == "__main__":
             PAGE = int(MATCH.group('page').strip())
 
         if KEY:
-            adcautelam(KEY, PAGE)
+            ad_cautelam(KEY, PAGE)
