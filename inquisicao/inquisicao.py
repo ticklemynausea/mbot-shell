@@ -11,6 +11,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
 
 TIMEOUT = 5
+TRUNCATE = 380
+
+def truncate_unicode_to_byte_limit(src, byte_limit, encoding='utf-8'):
+    """Ripado daqui: https://stackoverflow.com/a/24839091"""
+
+    return src.encode(encoding)[:byte_limit].decode(encoding, 'ignore')
 
 def auto_de_fe(processo, pesquisa=False):
     """Devolve uma string bonita sobre o processo"""
@@ -73,6 +79,18 @@ def auto_de_fe(processo, pesquisa=False):
                 result,
                 processo['match']['key'],
                 processo['match']['value'])
+
+    # Remover newlines e espaços duplicados
+    result = result.replace("\r\n", " ")
+    result = result.replace("\n", " ")
+    result = re.sub(' +', ' ', result)
+
+    original = result
+    result = truncate_unicode_to_byte_limit(original, TRUNCATE)
+
+    # Se a foi cortada, adiciona os ...
+    if original != result:
+        result = result + u"…"
 
     # Adiciona o short url
     result = "%s | %s" % (result, processo['url'])
