@@ -14,7 +14,7 @@ from lastfm_apikeys import api_key, api_secret
 
 LEL = "0,5last.fm"
 NUM_EVENTS = 5
-USERFILE = '/home/mbot/mbot/lastfm-data/lastfm.users'
+USERFILE = './lastfm-data/lastfm.users'
 CHART_LENGTH = 10
 PRETTY_BAR = ["[04====            ]",
               "[04====07====        ]",
