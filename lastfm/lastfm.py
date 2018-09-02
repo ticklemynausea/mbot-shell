@@ -6,9 +6,11 @@ import re
 import pickle
 
 # ../mylib.py
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
-from apikeys import api_key, api_secret
+
+sys.path.append(os.getcwd())
+from lastfm_apikeys import api_key, api_secret
 
 LEL = "0,5last.fm"
 NUM_EVENTS = 5
@@ -164,25 +166,25 @@ class LastFM:
   def compare_users(self, user, user2):
     try:
       # comparison = self.api.get_user(user).compare_with_user(user2)
-      
+
       user1_favs = self.api.get_user(user).get_top_artists('overall', 1000)
       user2_favs = self.api.get_user(user2).get_top_artists('overall', 1000)
-      
+
     except pylast.WSError as e:
       print_console(LEL + " WSError %s: %s" % (e.status, e.details))
       exit(-1)
-      
+
     n_artists1 = len(user1_favs)
     n_artists2 = len(user2_favs)
-    
+
     user1_favs = [i.item.__str__() for i in user1_favs]
     user2_favs = [i.item.__str__() for i in user2_favs]
-    
+
     intersection = [artist for artist in user1_favs if artist in user2_favs]
     artist_list = intersection[:5]
 
     comparison_index = round(200.0 * len(intersection) / (n_artists1 + n_artists2), 2)
-    
+
     if comparison_index < 1.0:
       bar = PRETTY_BAR[4]
     else:
