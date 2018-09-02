@@ -5,7 +5,9 @@ import pytwitter
 # ../mylib.py
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console, unescape
-from apikeys import consumer_key, consumer_secret, access_token_key, access_token_secret
+
+sys.path.append(os.getcwd())
+from twitter_apikeys import consumer_key, consumer_secret, access_token_key, access_token_secret
 
 L = "0,10twitter"
 
