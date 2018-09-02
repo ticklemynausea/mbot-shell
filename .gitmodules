@@ -4,4 +4,4 @@
 
 [submodule "fml"]
   path = fml
-  url = git@github.com:falsovsky/fml.git
+  url = git://github.com/falsovsky/fml.git
