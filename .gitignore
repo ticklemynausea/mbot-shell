@@ -1,6 +1,4 @@
 *.pyc
 *.swp
 rss/rss-data/
-lastfm/apikeys.py
-twitter/apikeys.py
-google/apikeys.py
+*_apikeys.py
