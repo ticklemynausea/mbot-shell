@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+import sys
 from requests import get
 from bs4 import BeautifulSoup
 
@@ -8,28 +10,28 @@ from bs4 import BeautifulSoup
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from mylib import print_console
 
-url = 'https://www.kernel.org/'
+URL = 'https://www.kernel.org/'
 
-response = get(url)
+if __name__ == "__main__":
+    KERNEL = {}
 
-soup = BeautifulSoup(response.text, 'html.parser')
+    RESPONSE = get(URL)
+    SOUP = BeautifulSoup(RESPONSE.text, 'html.parser')
 
-kernel = {}
-table = soup.find("table", { 'id': 'releases'})
-trs = table.find_all("tr")
-for tr in trs:
-    td = tr.find_all("td")
-    branch = td[0].text.strip()[:-1]
+    TABLE = SOUP.find("table", {'id': 'releases'})
+    TRS = TABLE.find_all("tr")
+    for TR in TRS:
+        TD = TR.find_all("td")
+        BRANCH = TD[0].text.strip()[:-1]
 
-    if branch == "longterm":
-        continue
+        if BRANCH == "longterm":
+            continue
 
-    if branch not in kernel:
-        kernel[branch] = td[1].text.strip()
+        if BRANCH not in KERNEL:
+            KERNEL[BRANCH] = TD[1].text.strip()
 
-output = "Latest Kernel: "
+    OUTPUT = "Latest Kernel: "
+    for k, v in KERNEL.items():
+        OUTPUT = OUTPUT + "{}: {}, ".format(k, v)
 
-for k,v in kernel.items():
-    output = output + "{}: {}, ".format(k, v)
-
-print_console(output[:-2])
+    print_console(OUTPUT[:-2])
